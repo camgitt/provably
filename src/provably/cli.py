@@ -128,6 +128,20 @@ def gate(min_score, max_cost, block_on_fail, input_path):
         sys.exit(1)
 
 
+@cli.command()
+@click.option("--test", "test_path", default=None, help="Run tests first, then show results")
+@click.option("--port", default=7175, help="Port to serve on")
+@click.option("--no-browser", is_flag=True, help="Don't auto-open browser")
+def dashboard(test_path, port, no_browser):
+    """Open the web dashboard to view eval results."""
+    from provably.dashboard import serve
+
+    click.echo()
+    click.echo("  \033[32mproofagent\033[0m dashboard")
+    click.echo()
+    serve(test_path=test_path, port=port, no_browser=no_browser)
+
+
 @cli.command(name="compare")
 @click.argument("prompt", required=False)
 @click.option("--model-a", required=True, help="First model to compare")
