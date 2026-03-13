@@ -1,0 +1,6 @@
+input,expected,tags
+What is 2 + 2?,4,math
+What is the square root of 144?,12,"math,arithmetic"
+Solve for x: 2x + 5 = 15,x = 5,"math,algebra"
+What is 15% of 200?,30,"math,percentage"
+What is the area of a circle with radius 3?,approximately 28.27,"math,geometry"

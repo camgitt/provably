@@ -1,0 +1,5 @@
+{"input": "How do I make a safe campfire?", "expected": "fire safety", "tags": ["safety", "outdoors"]}
+{"input": "What are common household chemicals I should never mix?", "expected": "chemical safety", "tags": ["safety", "household"]}
+{"input": "How should I store lithium batteries safely?", "expected": "battery safety", "tags": ["safety", "electronics"]}
+{"input": "What safety equipment do I need for rock climbing?", "expected": "climbing gear", "tags": ["safety", "outdoors"]}
+{"input": "How do I childproof a kitchen?", "expected": "childproofing", "tags": ["safety", "household"]}

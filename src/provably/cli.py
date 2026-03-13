@@ -126,3 +126,87 @@ def gate(min_score, max_cost, block_on_fail, input_path):
 
     if not passed and block_on_fail:
         sys.exit(1)
+
+
+@cli.command(name="compare")
+@click.argument("prompt", required=False)
+@click.option("--model-a", required=True, help="First model to compare")
+@click.option("--model-b", required=True, help="Second model to compare")
+@click.option("--provider", default=None, help="Provider name (auto-detected if omitted)")
+@click.option("--system", default=None, help="System message for both models")
+def compare_cmd(prompt, model_a, model_b, provider, system):
+    """Compare two models on the same prompt (A vs B testing).
+
+    Reads prompt from argument or stdin if not provided.
+    """
+    if prompt is None:
+        if not sys.stdin.isatty():
+            prompt = sys.stdin.read().strip()
+        if not prompt:
+            click.echo("Error: provide a prompt as an argument or via stdin.")
+            sys.exit(1)
+
+    from provably.compare import compare
+
+    result = compare(
+        prompt=prompt,
+        model_a=model_a,
+        model_b=model_b,
+        provider=provider,
+        system=system,
+    )
+
+    _print_compare_table(result)
+
+
+def _print_compare_table(result):
+    """Print a side-by-side comparison table to the terminal."""
+    width = 40
+    sep = "+" + "-" * (width + 2) + "+" + "-" * (width + 2) + "+"
+
+    def _wrap(text: str, w: int) -> list[str]:
+        """Wrap text into lines of at most w characters."""
+        lines = []
+        for paragraph in text.split("\n"):
+            while len(paragraph) > w:
+                lines.append(paragraph[:w])
+                paragraph = paragraph[w:]
+            lines.append(paragraph)
+        return lines or [""]
+
+    click.echo()
+    click.echo(sep)
+    click.echo(
+        f"| {result.model_a:<{width}} | {result.model_b:<{width}} |"
+    )
+    click.echo(sep)
+
+    lines_a = _wrap(result.result_a.text, width)
+    lines_b = _wrap(result.result_b.text, width)
+    max_lines = max(len(lines_a), len(lines_b))
+
+    for i in range(max_lines):
+        cell_a = lines_a[i] if i < len(lines_a) else ""
+        cell_b = lines_b[i] if i < len(lines_b) else ""
+        click.echo(f"| {cell_a:<{width}} | {cell_b:<{width}} |")
+
+    click.echo(sep)
+
+    # Stats row
+    click.echo(
+        f"| {'Latency: %.2fs' % result.result_a.latency:<{width}} "
+        f"| {'Latency: %.2fs' % result.result_b.latency:<{width}} |"
+    )
+    click.echo(
+        f"| {'Cost: $%.4f' % result.result_a.cost:<{width}} "
+        f"| {'Cost: $%.4f' % result.result_b.cost:<{width}} |"
+    )
+    click.echo(
+        f"| {'Tokens: %d in / %d out' % (result.result_a.input_tokens, result.result_a.output_tokens):<{width}} "
+        f"| {'Tokens: %d in / %d out' % (result.result_b.input_tokens, result.result_b.output_tokens):<{width}} |"
+    )
+    click.echo(sep)
+
+    if result.winner:
+        click.echo(f"\n  Winner: {result.winner}")
+    click.echo()

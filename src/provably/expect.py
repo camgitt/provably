@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import json
 import re
-from typing import Any
+from typing import Any, Callable
 
 from provably.result import LLMResult, ToolCall
 
@@ -249,3 +249,77 @@ class Expectation:
                 f"Expected trajectory under {max_steps} steps but got {length}"
             )
         return self
+
+    def custom(self, name: str, fn: Callable) -> Expectation:
+        """Run an inline custom assertion.
+
+        Args:
+            name: A descriptive name for the assertion (used in error messages).
+            fn: A callable that receives the LLMResult and returns True/False
+                or raises AssertionError.
+
+        Returns:
+            self for chaining.
+        """
+        try:
+            result = fn(self._result)
+        except AssertionError:
+            raise
+        except Exception as e:
+            raise AssertionError(
+                f"Custom assertion '{name}' raised {type(e).__name__}: {e}"
+            )
+        if result is False:
+            raise AssertionError(f"Custom assertion '{name}' returned False")
+        return self
+
+    def not_contains(self, text: str, case_sensitive: bool = True) -> Expectation:
+        """Assert the output does NOT contain a substring."""
+        output = self._result.text
+        target = text
+        if not case_sensitive:
+            output = output.lower()
+            target = target.lower()
+        if target in output:
+            raise AssertionError(
+                f"Expected output NOT to contain '{text}' but it was found in:\n"
+                f"  {self._result.text[:200]}"
+            )
+        return self
+
+    def length_under(self, max_chars: int) -> Expectation:
+        """Assert output length is below a threshold (characters)."""
+        length = len(self._result.text)
+        if length >= max_chars:
+            raise AssertionError(
+                f"Expected output length under {max_chars} but got {length}"
+            )
+        return self
+
+    def length_over(self, min_chars: int) -> Expectation:
+        """Assert output length is above a threshold (characters)."""
+        length = len(self._result.text)
+        if length <= min_chars:
+            raise AssertionError(
+                f"Expected output length over {min_chars} but got {length}"
+            )
+        return self
+
+
+def register_assertion(name: str, fn: Callable) -> None:
+    """Permanently register a custom assertion as a method on Expectation.
+
+    After registration, the assertion can be called like any built-in method:
+        register_assertion("is_polite", lambda self: "please" in self.result.text.lower())
+        expect(result).is_polite()
+
+    Args:
+        name: Method name to add to the Expectation class.
+        fn: A callable receiving (self, *args, **kwargs) where self is the
+            Expectation instance (self.result is the LLMResult).
+    """
+    if hasattr(Expectation, name):
+        raise ValueError(
+            f"Cannot register assertion '{name}': attribute already exists on Expectation"
+        )
+    setattr(Expectation, name, fn)
