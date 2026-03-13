@@ -52,6 +52,7 @@ tests/test_math.py::test_my_agent PASSED
 pip install provably                    # core (no API deps)
 pip install "provably[openai]"          # + OpenAI
 pip install "provably[anthropic]"       # + Anthropic
+pip install "provably[gemini]"         # + Google Gemini
 pip install "provably[all]"             # everything
 ```
 
@@ -219,6 +220,7 @@ def test_auto(provably_run):
 |---|---|---|
 | OpenAI | `provably[openai]` | `OPENAI_API_KEY` |
 | Anthropic | `provably[anthropic]` | `ANTHROPIC_API_KEY` |
+| Google Gemini | `provably[gemini]` | `GOOGLE_API_KEY` |
 | Ollama | Built-in | None (local) |
 | OpenAI-compatible | `provably[openai]` | `OPENAI_API_KEY` + `OPENAI_BASE_URL` |
 

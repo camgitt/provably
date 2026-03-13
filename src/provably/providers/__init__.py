@@ -28,13 +28,17 @@ def get_provider(name: str | None = None, **kwargs) -> Provider:
         from provably.providers.anthropic import AnthropicProvider
 
         return AnthropicProvider(**kwargs)
+    elif name == "gemini":
+        from provably.providers.gemini import GeminiProvider
+
+        return GeminiProvider(**kwargs)
     elif name == "ollama":
         from provably.providers.ollama import OllamaProvider
 
         return OllamaProvider(**kwargs)
     else:
         raise ValueError(
-            f"Unknown provider '{name}'. Available: openai, anthropic, ollama"
+            f"Unknown provider '{name}'. Available: openai, anthropic, gemini, ollama"
         )
 
 
@@ -44,4 +48,6 @@ def _detect_provider() -> str:
         return "openai"
     if os.getenv("ANTHROPIC_API_KEY"):
         return "anthropic"
+    if os.getenv("GOOGLE_API_KEY"):
+        return "gemini"
     return "ollama"
