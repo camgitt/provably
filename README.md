@@ -8,7 +8,7 @@
 
 <p align="center">
   <a href="https://pypi.org/project/provably/"><img src="https://img.shields.io/pypi/v/provably" alt="PyPI"></a>
-  <a href="https://github.com/provably-ai/provably/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="License"></a>
+  <a href="https://github.com/camgitt/provably/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="License"></a>
   <a href="https://pypi.org/project/provably/"><img src="https://img.shields.io/pypi/pyversions/provably" alt="Python"></a>
 </p>
 
