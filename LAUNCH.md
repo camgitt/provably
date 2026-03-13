@@ -18,7 +18,7 @@ Why we built this: after the Promptfoo acquisition, there was no serious indepen
 
 Works with OpenAI, Anthropic, local models, or anything with an HTTP endpoint. Install with `pip install provably` and write your first test in under a minute.
 
-GitHub: https://github.com/camgitt/provably
+GitHub: https://github.com/camgitt/proofagent
 PyPI: https://pypi.org/project/provably/
 
 ---
@@ -45,7 +45,7 @@ The architecture is deliberately simple. A test file is a Python file. An assert
 
 If you are evaluating LLMs in production or research and want tooling that is not owned by the companies you are evaluating, take a look.
 
-GitHub: https://github.com/camgitt/provably
+GitHub: https://github.com/camgitt/proofagent
 PyPI: https://pypi.org/project/provably/
 
 ---
@@ -66,7 +66,7 @@ Works with any LLM provider. Integrates with your existing CI. Nothing to config
 
 We built this after Promptfoo was acquired by OpenAI. Provably is independent, MIT-licensed, and will stay that way.
 
-GitHub: https://github.com/camgitt/provably
+GitHub: https://github.com/camgitt/proofagent
 PyPI: https://pypi.org/project/provably/
 
 ---
@@ -81,7 +81,7 @@ Provably: open-source LLM testing as a pytest plugin. No YAML, no telemetry, no 
 
 pip install provably
 
-https://github.com/camgitt/provably
+https://github.com/camgitt/proofagent
 
 **Draft 2:**
 
@@ -101,4 +101,4 @@ run pytest
 
 No YAML. No config server. No telemetry. Independent and open-source.
 
-https://github.com/camgitt/provably
+https://github.com/camgitt/proofagent

@@ -129,6 +129,6 @@ provably gate --min-score 0.85 --block-on-fail
 
 ## Links
 
-- GitHub: [https://github.com/camgitt/provably](https://github.com/camgitt/provably)
+- GitHub: [https://github.com/camgitt/proofagent](https://github.com/camgitt/proofagent)
 - PyPI: [https://pypi.org/project/provably/](https://pypi.org/project/provably/)
 - Install: `pip install provably`

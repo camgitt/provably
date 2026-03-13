@@ -1,6 +1,6 @@
 # Awesome List Submissions for Provably
 
-Repo: https://github.com/camgitt/provably
+Repo: https://github.com/camgitt/proofagent
 
 ---
 
@@ -11,7 +11,7 @@ Repo: https://github.com/camgitt/provably
 - **Section**: Testing > Testing Frameworks
 - **Entry**:
   ```
-  - [provably](https://github.com/camgitt/provably) - A pytest-based evaluation framework for testing AI agents with 10 assertion types.
+  - [provably](https://github.com/camgitt/proofagent) - A pytest-based evaluation framework for testing AI agents with 10 assertion types.
   ```
 - **Notes**:
   - Submit as a single-project PR. Do not bundle with other submissions.
@@ -30,7 +30,7 @@ Repo: https://github.com/camgitt/provably
 - **Section**: LLM Evaluation (closest fit; there is no dedicated "Tools" section -- tools are spread across topical sections)
 - **Entry**:
   ```
-  - [provably](https://github.com/camgitt/provably) - A pytest plugin for evaluating LLM agents with chainable assertions, multi-provider support, and CI/CD gating.
+  - [provably](https://github.com/camgitt/proofagent) - A pytest plugin for evaluating LLM agents with chainable assertions, multi-provider support, and CI/CD gating.
   ```
 - **Notes**:
   - The repo says "your contributions are always welcome" via PR.
@@ -46,7 +46,7 @@ Repo: https://github.com/camgitt/provably
 - **Section**: Free Courses > Evaluation (under the course/resource listings)
 - **Entry**:
   ```
-  [provably: pytest for AI agents](https://github.com/camgitt/provably) - Open-source evaluation framework with 10 assertion types, multi-provider support, and CI/CD quality gates
+  [provably: pytest for AI agents](https://github.com/camgitt/proofagent) - Open-source evaluation framework with 10 assertion types, multi-provider support, and CI/CD quality gates
   ```
 - **Notes**:
   - This list is structured as a learning guide, not a pure tool list. Entries are courses, tutorials, and resources.
@@ -63,7 +63,7 @@ Repo: https://github.com/camgitt/provably
 - **Section**: Open-source projects (alphabetical order)
 - **Entry**:
   ```markdown
-  ## [provably](https://github.com/camgitt/provably)
+  ## [provably](https://github.com/camgitt/proofagent)
   pytest for AI agents -- test your agents, prove they work, block bad deploys
 
   <details>
@@ -80,7 +80,7 @@ Repo: https://github.com/camgitt/provably
   - Zero telemetry, no YAML, no vendor lock-in
 
   ### Links
-  - [GitHub](https://github.com/camgitt/provably)
+  - [GitHub](https://github.com/camgitt/proofagent)
   - [PyPI](https://pypi.org/project/provably/)
   </details>
   ```

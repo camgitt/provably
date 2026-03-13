@@ -5,7 +5,7 @@ Thanks for your interest in contributing! Here's how to get started.
 ## Setup
 
 ```bash
-git clone https://github.com/camgitt/provably.git
+git clone https://github.com/camgitt/proofagent.git
 cd provably
 python -m venv .venv
 source .venv/bin/activate

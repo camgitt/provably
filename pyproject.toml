@@ -39,9 +39,9 @@ provably = "provably.cli:cli"
 provably = "provably.plugin"
 
 [project.urls]
-Homepage = "https://github.com/camgitt/provably"
-Documentation = "https://github.com/camgitt/provably"
-Repository = "https://github.com/camgitt/provably"
+Homepage = "https://github.com/camgitt/proofagent"
+Documentation = "https://github.com/camgitt/proofagent"
+Repository = "https://github.com/camgitt/proofagent"
 
 [tool.setuptools]
 packages = {find = {where = ["src"]}}
