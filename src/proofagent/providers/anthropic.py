@@ -1,11 +1,11 @@
-"""Anthropic provider adapter. Requires: pip install provably[anthropic]"""
+"""Anthropic provider adapter. Requires: pip install proofagent[anthropic]"""
 
 from __future__ import annotations
 
 import os
 
-from provably.providers.base import Provider
-from provably.result import LLMResult, ToolCall
+from proofagent.providers.base import Provider
+from proofagent.result import LLMResult, ToolCall
 
 
 _COSTS = {
@@ -23,7 +23,7 @@ class AnthropicProvider(Provider):
             import anthropic
         except ImportError:
             raise ImportError(
-                "Anthropic SDK not installed. Run: pip install provably[anthropic]"
+                "Anthropic SDK not installed. Run: pip install proofagent[anthropic]"
             )
         self._client = anthropic.Anthropic(
             api_key=api_key or os.getenv("ANTHROPIC_API_KEY"),

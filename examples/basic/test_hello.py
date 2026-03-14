@@ -1,6 +1,6 @@
 """Basic example — no API key needed for these tests."""
 
-from provably import LLMResult, ToolCall, expect
+from proofagent import LLMResult, ToolCall, expect
 
 
 def test_json_output():

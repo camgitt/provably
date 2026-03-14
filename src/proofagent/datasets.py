@@ -1,4 +1,4 @@
-"""Dataset loading utilities for provably evaluations.
+"""Dataset loading utilities for proofagent evaluations.
 
 Load test cases from CSV or JSONL files and work with them as structured
 datasets that can be filtered, sampled, and passed into parametrized tests.

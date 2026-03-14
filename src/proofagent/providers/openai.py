@@ -1,11 +1,11 @@
-"""OpenAI provider adapter. Requires: pip install provably[openai]"""
+"""OpenAI provider adapter. Requires: pip install proofagent[openai]"""
 
 from __future__ import annotations
 
 import os
 
-from provably.providers.base import Provider
-from provably.result import LLMResult, ToolCall
+from proofagent.providers.base import Provider
+from proofagent.result import LLMResult, ToolCall
 
 
 # Approximate cost per 1K tokens (USD) — updated for common models
@@ -26,7 +26,7 @@ class OpenAIProvider(Provider):
             import openai
         except ImportError:
             raise ImportError(
-                "OpenAI SDK not installed. Run: pip install provably[openai]"
+                "OpenAI SDK not installed. Run: pip install proofagent[openai]"
             )
         self._client = openai.OpenAI(
             api_key=api_key or os.getenv("OPENAI_API_KEY"),

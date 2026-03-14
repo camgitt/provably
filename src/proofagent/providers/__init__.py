@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import os
 
-from provably.providers.base import Provider
+from proofagent.providers.base import Provider
 
 
 def get_provider(name: str | None = None, **kwargs) -> Provider:
@@ -21,19 +21,19 @@ def get_provider(name: str | None = None, **kwargs) -> Provider:
         name = _detect_provider()
 
     if name == "openai":
-        from provably.providers.openai import OpenAIProvider
+        from proofagent.providers.openai import OpenAIProvider
 
         return OpenAIProvider(**kwargs)
     elif name == "anthropic":
-        from provably.providers.anthropic import AnthropicProvider
+        from proofagent.providers.anthropic import AnthropicProvider
 
         return AnthropicProvider(**kwargs)
     elif name == "gemini":
-        from provably.providers.gemini import GeminiProvider
+        from proofagent.providers.gemini import GeminiProvider
 
         return GeminiProvider(**kwargs)
     elif name == "ollama":
-        from provably.providers.ollama import OllamaProvider
+        from proofagent.providers.ollama import OllamaProvider
 
         return OllamaProvider(**kwargs)
     else:

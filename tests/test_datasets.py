@@ -8,7 +8,7 @@ import tempfile
 
 import pytest
 
-from provably.datasets import Dataset, load_dataset
+from proofagent.datasets import Dataset, load_dataset
 
 
 # ---------------------------------------------------------------------------

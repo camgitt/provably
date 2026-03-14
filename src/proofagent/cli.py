@@ -1,4 +1,4 @@
-"""Provably CLI — test, report, and gate commands."""
+"""proofagent CLI — test, report, and gate commands."""
 
 from __future__ import annotations
 
@@ -6,13 +6,13 @@ import sys
 
 import click
 
-from provably.__version__ import __version__
+from proofagent.__version__ import __version__
 
 
 @click.group()
-@click.version_option(__version__, prog_name="provably")
+@click.version_option(__version__, prog_name="proofagent")
 def cli():
-    """Provably — pytest for AI agents."""
+    """proofagent — pytest for AI agents."""
     pass
 
 
@@ -23,7 +23,7 @@ def cli():
 @click.option("-v", "--verbose", is_flag=True, help="Verbose output")
 @click.option("-k", default=None, help="Only run tests matching expression")
 def test(path, model, provider, verbose, k):
-    """Run provably eval tests."""
+    """Run proofagent eval tests."""
     import subprocess
 
     cmd = ["python", "-m", "pytest", path, "--tb=short"]
@@ -37,9 +37,9 @@ def test(path, model, provider, verbose, k):
 
     env = os.environ.copy()
     if model:
-        env["PROVABLY_MODEL"] = model
+        env["PROOFAGENT_MODEL"] = model
     if provider:
-        env["PROVABLY_PROVIDER"] = provider
+        env["PROOFAGENT_PROVIDER"] = provider
 
     result = subprocess.run(cmd, env=env)
     sys.exit(result.returncode)
@@ -47,7 +47,7 @@ def test(path, model, provider, verbose, k):
 
 @cli.command()
 @click.option(
-    "--input", "input_path", default=".provably/results", help="Results directory"
+    "--input", "input_path", default=".proofagent/results", help="Results directory"
 )
 @click.option(
     "--format",
@@ -57,11 +57,11 @@ def test(path, model, provider, verbose, k):
 )
 def report(input_path, fmt):
     """Show latest eval results."""
-    from provably.report import load_latest_results, print_summary
+    from proofagent.report import load_latest_results, print_summary
 
     data = load_latest_results(input_path)
     if data is None:
-        click.echo("No results found. Run 'provably test' first.")
+        click.echo("No results found. Run 'proofagent test' first.")
         sys.exit(1)
 
     if fmt == "json":
@@ -77,16 +77,16 @@ def report(input_path, fmt):
 @click.option("--max-cost", default=None, type=float, help="Maximum total cost (USD)")
 @click.option("--block-on-fail", is_flag=True, help="Exit code 1 if gate fails")
 @click.option(
-    "--input", "input_path", default=".provably/results", help="Results directory"
+    "--input", "input_path", default=".proofagent/results", help="Results directory"
 )
 def gate(min_score, max_cost, block_on_fail, input_path):
     """CI quality gate — check if eval results meet thresholds."""
-    from provably import display
-    from provably.report import load_latest_results
+    from proofagent import display
+    from proofagent.report import load_latest_results
 
     data = load_latest_results(input_path)
     if data is None:
-        click.echo("No results found. Run 'provably test' first.")
+        click.echo("No results found. Run 'proofagent test' first.")
         sys.exit(1)
 
     summary = data.get("summary", {})
@@ -94,7 +94,7 @@ def gate(min_score, max_cost, block_on_fail, input_path):
     total_cost = summary.get("total_cost", 0)
     passed = True
 
-    click.echo(display.header("Provably Gate"))
+    click.echo(display.header("proofagent Gate"))
     click.echo(
         f"  Score: {display.format_score(summary.get('passed', 0), summary.get('total', 0))}"
     )
@@ -134,7 +134,7 @@ def gate(min_score, max_cost, block_on_fail, input_path):
 @click.option("--no-browser", is_flag=True, help="Don't auto-open browser")
 def dashboard(test_path, port, no_browser):
     """Open the web dashboard to view eval results."""
-    from provably.dashboard import serve
+    from proofagent.dashboard import serve
 
     click.echo()
     click.echo("  \033[32mproofagent\033[0m dashboard")
@@ -160,7 +160,7 @@ def compare_cmd(prompt, model_a, model_b, provider, system):
             click.echo("Error: provide a prompt as an argument or via stdin.")
             sys.exit(1)
 
-    from provably.compare import compare
+    from proofagent.compare import compare
 
     result = compare(
         prompt=prompt,

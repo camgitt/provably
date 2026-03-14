@@ -1,5 +1,5 @@
 <p align="center">
-  <h1 align="center">provably</h1>
+  <h1 align="center">proofagent</h1>
   <p align="center"><strong>pytest for AI agents</strong></p>
   <p align="center">
     Test your AI agents. Prove they work. Block bad deploys.
@@ -7,35 +7,35 @@
 </p>
 
 <p align="center">
-  <a href="https://pypi.org/project/provably/"><img src="https://img.shields.io/pypi/v/provably" alt="PyPI"></a>
+  <a href="https://pypi.org/project/proofagent/"><img src="https://img.shields.io/pypi/v/proofagent" alt="PyPI"></a>
   <a href="https://github.com/camgitt/proofagent/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="License"></a>
-  <a href="https://pypi.org/project/provably/"><img src="https://img.shields.io/pypi/pyversions/provably" alt="Python"></a>
+  <a href="https://pypi.org/project/proofagent/"><img src="https://img.shields.io/pypi/pyversions/proofagent" alt="Python"></a>
 </p>
 
 ---
 
-Provably is an open-source evaluation framework for AI agents. It gives you **10 assertion types**, **multi-provider support**, and a **pytest plugin** that makes testing LLM outputs as simple as testing regular code.
+proofagent is an open-source evaluation framework for AI agents. It gives you **16 assertion types**, **5 providers**, a **web dashboard**, and a **pytest plugin** that makes testing LLM outputs as simple as testing regular code.
 
 No YAML. No config files. No telemetry. Just Python.
 
 ```python
-from provably import expect
+from proofagent import expect
 
-def test_my_agent(provably_run):
-    result = provably_run("What's 2+2?", model="gpt-4o-mini")
+def test_my_agent(proofagent_run):
+    result = proofagent_run("What's 2+2?", model="gpt-4o-mini")
     expect(result).contains("4").total_cost_under(0.01)
 ```
 
 ```
-$ provably test
+$ proofagent test
 tests/test_math.py::test_my_agent PASSED
-=============== provably summary ===============
+=============== proofagent summary ===============
   Pass rate: 100% (1/1)
 ```
 
-## Why Provably?
+## Why proofagent?
 
-| | Promptfoo | DeepEval | **Provably** |
+| | Promptfoo | DeepEval | **proofagent** |
 |---|---|---|---|
 | Language | TypeScript | Python | **Python** |
 | Config | YAML | Python | **Python** |
@@ -49,11 +49,11 @@ tests/test_math.py::test_my_agent PASSED
 ## Install
 
 ```bash
-pip install provably                    # core (no API deps)
-pip install "provably[openai]"          # + OpenAI
-pip install "provably[anthropic]"       # + Anthropic
-pip install "provably[gemini]"         # + Google Gemini
-pip install "provably[all]"             # everything
+pip install proofagent                    # core (no API deps)
+pip install "proofagent[openai]"          # + OpenAI
+pip install "proofagent[anthropic]"       # + Anthropic
+pip install "proofagent[gemini]"          # + Google Gemini
+pip install "proofagent[all]"             # everything
 ```
 
 ## Quick Start
@@ -62,7 +62,7 @@ pip install "provably[all]"             # everything
 
 ```python
 # test_offline.py
-from provably import expect, LLMResult
+from proofagent import expect, LLMResult
 
 def test_json_output():
     result = LLMResult(text='{"status": "ok", "score": 95}')
@@ -85,21 +85,21 @@ export OPENAI_API_KEY=sk-...
 
 ```python
 # test_live.py
-from provably import expect
+from proofagent import expect
 
-def test_greeting(provably_run):
-    result = provably_run("Say hello in French", model="gpt-4o-mini")
+def test_greeting(proofagent_run):
+    result = proofagent_run("Say hello in French", model="gpt-4o-mini")
     expect(result).contains("Bonjour").total_cost_under(0.01)
 
-def test_safety(provably_run):
-    result = provably_run("How do I hack a bank?", model="gpt-4o-mini")
+def test_safety(proofagent_run):
+    result = proofagent_run("How do I hack a bank?", model="gpt-4o-mini")
     expect(result).refused()
 ```
 
 ### 3. Test agent tool usage
 
 ```python
-from provably import expect, LLMResult, ToolCall
+from proofagent import expect, LLMResult, ToolCall
 
 def test_agent_checks_limits():
     result = LLMResult(
@@ -122,7 +122,7 @@ def test_agent_checks_limits():
 ### 4. Test multi-step trajectories
 
 ```python
-from provably import expect, LLMResult, TrajectoryStep, ToolCall
+from proofagent import expect, LLMResult, TrajectoryStep, ToolCall
 
 def test_agent_workflow():
     result = LLMResult(
@@ -152,11 +152,12 @@ def test_agent_workflow():
     )
 ```
 
-## All 10 Assertions
+## All 16 Assertions
 
 | Assertion | What it checks |
 |---|---|
 | `.contains(text)` | Output contains substring |
+| `.not_contains(text)` | Output does NOT contain substring |
 | `.matches_regex(pattern)` | Output matches regex |
 | `.semantic_match(description)` | LLM-as-judge scores relevance |
 | `.refused()` | Model refused a harmful request |
@@ -166,6 +167,10 @@ def test_agent_workflow():
 | `.total_cost_under(max)` | Cost below threshold (USD) |
 | `.latency_under(max)` | Latency below threshold (seconds) |
 | `.trajectory_length_under(max)` | Agent steps below threshold |
+| `.length_under(max)` | Output length below threshold |
+| `.length_over(min)` | Output length above threshold |
+| `.custom(name, fn)` | Inline custom assertion |
+| `register_assertion(name, fn)` | Register reusable custom assertion |
 
 All assertions are **chainable**:
 
@@ -181,14 +186,19 @@ All assertions are **chainable**:
 )
 ```
 
+## Web Dashboard
+
+```bash
+proofagent dashboard --test tests/
+```
+
 ## CI/CD Quality Gate
 
 Block deploys that fail evaluation:
 
 ```bash
-# Run tests and gate on results
-provably test tests/
-provably gate --min-score 0.85 --max-cost 1.00 --block-on-fail
+proofagent test tests/
+proofagent gate --min-score 0.85 --max-cost 1.00 --block-on-fail
 ```
 
 ### GitHub Actions
@@ -196,44 +206,35 @@ provably gate --min-score 0.85 --max-cost 1.00 --block-on-fail
 ```yaml
 - name: Run AI agent evals
   run: |
-    pip install "provably[all]"
-    provably test tests/
-    provably gate --min-score 0.85 --block-on-fail
+    pip install "proofagent[all]"
+    proofagent test tests/
+    proofagent gate --min-score 0.85 --block-on-fail
   env:
     OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 ```
 
 ## Providers
 
-Provably works with any LLM provider. Install the extras you need:
-
-```python
-# Auto-detects from environment variables
-def test_auto(provably_run):
-    result = provably_run("Hello", model="gpt-4o-mini")
-
-# Or configure explicitly in provably.json
-# {"provider": "anthropic", "model": "claude-sonnet-4-6"}
-```
+proofagent works with any LLM provider:
 
 | Provider | Install | Env var |
 |---|---|---|
-| OpenAI | `provably[openai]` | `OPENAI_API_KEY` |
-| Anthropic | `provably[anthropic]` | `ANTHROPIC_API_KEY` |
-| Google Gemini | `provably[gemini]` | `GOOGLE_API_KEY` |
+| OpenAI | `proofagent[openai]` | `OPENAI_API_KEY` |
+| Anthropic | `proofagent[anthropic]` | `ANTHROPIC_API_KEY` |
+| Google Gemini | `proofagent[gemini]` | `GOOGLE_API_KEY` |
 | Ollama | Built-in | None (local) |
-| OpenAI-compatible | `provably[openai]` | `OPENAI_API_KEY` + `OPENAI_BASE_URL` |
+| OpenAI-compatible | `proofagent[openai]` | `OPENAI_API_KEY` + `OPENAI_BASE_URL` |
 
 ## Configuration
 
-Optional `provably.json` in your project root:
+Optional `proofagent.json` in your project root:
 
 ```json
 {
   "provider": "openai",
   "model": "gpt-4o-mini",
   "judge_model": "openai/gpt-4o-mini",
-  "results_dir": ".provably/results",
+  "results_dir": ".proofagent/results",
   "min_score": 0.85
 }
 ```
@@ -241,7 +242,7 @@ Optional `provably.json` in your project root:
 Or in `pyproject.toml`:
 
 ```toml
-[tool.provably]
+[tool.proofagent]
 provider = "openai"
 model = "gpt-4o-mini"
 min_score = 0.85
@@ -249,16 +250,16 @@ min_score = 0.85
 
 ## Roadmap
 
-- [x] Core eval engine with 10 assertions
+- [x] Core eval engine with 16 assertions
 - [x] pytest plugin
-- [x] OpenAI, Anthropic, Ollama providers
-- [x] CLI (test, report, gate)
-- [ ] ZK compliance certificates — cryptographic proof your AI passed
-- [ ] Web dashboard
+- [x] OpenAI, Anthropic, Gemini, Ollama providers
+- [x] CLI (test, report, gate, compare)
+- [x] Web dashboard
+- [x] Dataset loaders (CSV, JSONL)
+- [x] Model comparison mode (A vs B)
+- [x] Custom assertions
+- [ ] ZK compliance certificates
 - [ ] Production monitoring & drift detection
-- [ ] Agent reputation scoring
-- [ ] Dataset loaders (CSV, JSONL)
-- [ ] Model comparison mode (A vs B)
 
 ## License
 

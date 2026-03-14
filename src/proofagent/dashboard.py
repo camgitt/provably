@@ -11,12 +11,12 @@ import webbrowser
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 from pathlib import Path
 
-from provably.report import load_latest_results
+from proofagent.report import load_latest_results
 
 _PORT = 7175
 
 
-def _collect_all_results(results_dir: str = ".provably/results") -> list[dict]:
+def _collect_all_results(results_dir: str = ".proofagent/results") -> list[dict]:
     rd = Path(results_dir)
     if not rd.exists():
         return []
@@ -567,7 +567,7 @@ const rawStdout = {raw_stdout_json};
 (function() {{
   if (!tests.length && !summary.total) {{
     document.getElementById('tbody').innerHTML =
-      '<tr><td colspan="4"><div class="empty-state">No results yet.<br><br>Run tests with:<br><code>provably dashboard --test tests/</code></div></td></tr>';
+      '<tr><td colspan="4"><div class="empty-state">No results yet.<br><br>Run tests with:<br><code>proofagent dashboard --test tests/</code></div></td></tr>';
     return;
   }}
 

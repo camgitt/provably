@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import os
 
-from provably.providers.base import Provider
-from provably.result import LLMResult, ToolCall
+from proofagent.providers.base import Provider
+from proofagent.result import LLMResult, ToolCall
 
 
 # Approximate cost per 1K tokens (USD)

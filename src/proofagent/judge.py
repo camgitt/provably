@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 import re
 
-from provably.providers import get_provider
+from proofagent.providers import get_provider
 
 _JUDGE_PROMPT = """You are an evaluation judge. Score how well the AI output matches the given description.
 

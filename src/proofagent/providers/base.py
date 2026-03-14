@@ -5,7 +5,7 @@ from __future__ import annotations
 import time
 from abc import ABC, abstractmethod
 
-from provably.result import LLMResult, ToolCall, TrajectoryStep
+from proofagent.result import LLMResult, ToolCall, TrajectoryStep
 
 
 class Provider(ABC):

@@ -2,7 +2,7 @@
 
 import pytest
 
-from provably import LLMResult, ToolCall, TrajectoryStep, expect
+from proofagent import LLMResult, ToolCall, TrajectoryStep, expect
 
 
 # --- contains ---

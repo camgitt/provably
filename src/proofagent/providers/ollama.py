@@ -6,8 +6,8 @@ import json
 
 import requests
 
-from provably.providers.base import Provider
-from provably.result import LLMResult, ToolCall
+from proofagent.providers.base import Provider
+from proofagent.result import LLMResult, ToolCall
 
 
 class OllamaProvider(Provider):

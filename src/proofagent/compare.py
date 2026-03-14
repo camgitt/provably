@@ -1,7 +1,7 @@
 """Model comparison (A vs B testing) for evaluating LLM outputs side by side.
 
 Usage:
-    from provably import compare, CompareResult
+    from proofagent import compare, CompareResult
 
     result = compare("Explain gravity", model_a="gpt-4o", model_b="claude-sonnet-4-20250514")
     print(result.winner)
@@ -12,8 +12,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Callable
 
-from provably.providers import get_provider
-from provably.result import LLMResult
+from proofagent.providers import get_provider
+from proofagent.result import LLMResult
 
 
 @dataclass

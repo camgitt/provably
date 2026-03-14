@@ -1,7 +1,7 @@
 """Fluent assertion API for evaluating LLM and agent outputs.
 
 Usage:
-    from provably import expect, LLMResult
+    from proofagent import expect, LLMResult
 
     result = LLMResult(text="Hello, world!")
     expect(result).contains("Hello").matches_regex(r"\\w+, \\w+!")
@@ -13,7 +13,7 @@ import json
 import re
 from typing import Any, Callable
 
-from provably.result import LLMResult, ToolCall
+from proofagent.result import LLMResult, ToolCall
 
 
 # Refusal indicators — phrases that signal a model refused a request
@@ -115,7 +115,7 @@ class Expectation:
             judge: Model to use as judge (provider/model format).
             threshold: Minimum score (0.0-1.0) to pass.
         """
-        from provably.judge import evaluate_semantic_match
+        from proofagent.judge import evaluate_semantic_match
 
         for desc in descriptions:
             score = evaluate_semantic_match(

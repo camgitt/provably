@@ -1,6 +1,6 @@
 """Tests for LLMResult and related data structures."""
 
-from provably import LLMResult, ToolCall, TrajectoryStep
+from proofagent import LLMResult, ToolCall, TrajectoryStep
 
 
 def test_llm_result_basic():

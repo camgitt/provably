@@ -2,7 +2,7 @@
 
 import pytest
 
-from provably import Expectation, expect, register_assertion
+from proofagent import Expectation, expect, register_assertion
 
 
 # --- custom() inline assertion ---

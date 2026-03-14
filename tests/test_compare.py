@@ -1,10 +1,19 @@
 """Tests for model comparison (A vs B testing)."""
 
+import importlib
+import sys
 from unittest.mock import MagicMock, patch
 
-from provably import CompareResult, compare, compare_batch
-from provably.compare import compare as compare_fn
-from provably.result import LLMResult
+# proofagent.__init__ re-exports the function "compare", which shadows
+# the module name when using @patch.object(_compare_mod, "get_provider").
+# We grab the actual module from sys.modules instead.
+import proofagent.compare  # noqa: F401 — ensure module is loaded
+_compare_mod = sys.modules["proofagent.compare"]
+compare_fn = _compare_mod.compare
+
+from proofagent import CompareResult, compare_batch
+from proofagent.result import LLMResult
+
 
 
 # ── CompareResult dataclass ─────────────────────────────────────────
@@ -78,7 +87,7 @@ def _make_mock_provider(results_by_model):
     return provider
 
 
-@patch("provably.compare.get_provider")
+@patch.object(_compare_mod, "get_provider")
 def test_compare_runs_both_models(mock_get_provider):
     result_a = LLMResult(text="Response A", model="alpha")
     result_b = LLMResult(text="Response B", model="beta")
@@ -95,7 +104,7 @@ def test_compare_runs_both_models(mock_get_provider):
     assert cr.winner is None
 
 
-@patch("provably.compare.get_provider")
+@patch.object(_compare_mod, "get_provider")
 def test_compare_with_assertions_a_wins(mock_get_provider):
     result_a = LLMResult(text="Hello world", model="alpha")
     result_b = LLMResult(text="Goodbye", model="beta")
@@ -113,7 +122,7 @@ def test_compare_with_assertions_a_wins(mock_get_provider):
     assert cr.assertion_results["b"]["contains_hello"] is False
 
 
-@patch("provably.compare.get_provider")
+@patch.object(_compare_mod, "get_provider")
 def test_compare_with_assertions_b_wins(mock_get_provider):
     result_a = LLMResult(text="short", model="alpha")
     result_b = LLMResult(text="a much longer response here", model="beta")
@@ -129,7 +138,7 @@ def test_compare_with_assertions_b_wins(mock_get_provider):
     assert cr.winner == "beta"
 
 
-@patch("provably.compare.get_provider")
+@patch.object(_compare_mod, "get_provider")
 def test_compare_with_assertions_tie(mock_get_provider):
     result_a = LLMResult(text="Hello world", model="alpha")
     result_b = LLMResult(text="Hello earth", model="beta")
@@ -145,7 +154,7 @@ def test_compare_with_assertions_tie(mock_get_provider):
     assert cr.winner is None  # tie
 
 
-@patch("provably.compare.get_provider")
+@patch.object(_compare_mod, "get_provider")
 def test_compare_assertion_exception_counts_as_fail(mock_get_provider):
     result_a = LLMResult(text="ok", model="alpha")
     result_b = LLMResult(text="ok", model="beta")
@@ -170,7 +179,7 @@ def test_compare_assertion_exception_counts_as_fail(mock_get_provider):
     assert cr.assertion_results["b"]["flaky"] is True
 
 
-@patch("provably.compare.get_provider")
+@patch.object(_compare_mod, "get_provider")
 def test_compare_passes_provider_name(mock_get_provider):
     result = LLMResult(text="x")
     mock_get_provider.return_value = _make_mock_provider(
@@ -185,7 +194,7 @@ def test_compare_passes_provider_name(mock_get_provider):
 # ── compare_batch() ─────────────────────────────────────────────────
 
 
-@patch("provably.compare.get_provider")
+@patch.object(_compare_mod, "get_provider")
 def test_compare_batch(mock_get_provider):
     result_a = LLMResult(text="A", model="alpha")
     result_b = LLMResult(text="B", model="beta")
@@ -204,7 +213,7 @@ def test_compare_batch(mock_get_provider):
     assert all(r.model_a == "alpha" for r in results)
 
 
-@patch("provably.compare.get_provider")
+@patch.object(_compare_mod, "get_provider")
 def test_compare_batch_empty(mock_get_provider):
     results = compare_batch(prompts=[], model_a="a", model_b="b")
     assert results == []

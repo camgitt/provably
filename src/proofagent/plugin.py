@@ -1,8 +1,8 @@
-"""Pytest plugin for provably — auto-registered via entry point."""
+"""Pytest plugin for proofagent — auto-registered via entry point."""
 
 from __future__ import annotations
 
-from provably.markers import MARKERS
+from proofagent.markers import MARKERS
 
 
 def pytest_configure(config):
@@ -12,11 +12,11 @@ def pytest_configure(config):
 
 
 # Register fixtures by importing them — pytest discovers them from here
-from provably.fixtures import provably_config, provably_provider, provably_run  # noqa: E402, F401
+from proofagent.fixtures import proofagent_config, proofagent_provider, proofagent_run  # noqa: E402, F401
 
 
 def pytest_terminal_summary(terminalreporter, exitstatus, config):
-    """Print provably summary after test run."""
+    """Print proofagent summary after test run."""
     stats = terminalreporter.stats
     passed = len(stats.get("passed", []))
     failed = len(stats.get("failed", []))
@@ -26,7 +26,7 @@ def pytest_terminal_summary(terminalreporter, exitstatus, config):
         return
 
     score = passed / total if total > 0 else 0
-    terminalreporter.write_sep("=", "provably summary")
+    terminalreporter.write_sep("=", "proofagent summary")
     terminalreporter.write_line(f"  Pass rate: {score:.0%} ({passed}/{total})")
 
     if failed > 0:

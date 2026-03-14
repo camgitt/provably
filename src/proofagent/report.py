@@ -6,12 +6,12 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
-from provably import display
+from proofagent import display
 
 
 def save_results(
     results: list[dict],
-    output_dir: str | Path = ".provably/results",
+    output_dir: str | Path = ".proofagent/results",
 ) -> Path:
     """Save eval results to a JSON file."""
     output_dir = Path(output_dir)
@@ -34,7 +34,7 @@ def save_results(
     return output_file
 
 
-def load_latest_results(results_dir: str | Path = ".provably/results") -> dict | None:
+def load_latest_results(results_dir: str | Path = ".proofagent/results") -> dict | None:
     """Load the most recent results file."""
     results_dir = Path(results_dir)
     if not results_dir.exists():
@@ -53,7 +53,7 @@ def print_summary(data: dict) -> None:
     summary = data.get("summary", {})
     results = data.get("results", [])
 
-    print(display.header("Provably Eval Report"))
+    print(display.header("proofagent Eval Report"))
     print(
         f"  Score: {display.format_score(summary.get('passed', 0), summary.get('total', 0))}"
     )

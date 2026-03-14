@@ -4,7 +4,7 @@ Demonstrates testing agent behavior across multiple steps,
 including tool calls, cost tracking, and trajectory length.
 """
 
-from provably import LLMResult, ToolCall, TrajectoryStep, expect
+from proofagent import LLMResult, ToolCall, TrajectoryStep, expect
 
 
 def test_trading_agent_safety():
