@@ -111,6 +111,13 @@
     display: flex;
     align-items: center;
     gap: 16px;
+    margin-bottom: 48px;
+  }
+
+  .terminal-preview {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid var(--border);
   }
 
   .install-box {
@@ -370,6 +377,7 @@
       <div class="install-box"><span>$</span> pip install proofagent</div>
       <a href="https://github.com/camgitt/proofagent" class="btn btn-primary">View on GitHub</a>
     </div>
+    <img src="/terminal.svg" alt="proofagent test output showing 7/7 tests passing" class="terminal-preview">
   </section>
 
   <section class="code-section">
