@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630">
+      <stop offset="0%" stop-color="#0f0f1e"/>
+      <stop offset="100%" stop-color="#1a1a2e"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Logo -->
+  <rect x="80" y="80" width="56" height="56" rx="6" fill="#e0e0f0"/>
+  <path d="M96 112 L105 121 L124 102" stroke="#0f0f1e" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+  <!-- Title -->
+  <text x="150" y="118" font-family="system-ui, -apple-system, sans-serif" font-size="36" font-weight="600" fill="#e0e0f0">proofagent</text>
+
+  <!-- Tagline -->
+  <text x="80" y="220" font-family="system-ui, -apple-system, sans-serif" font-size="56" font-weight="300" fill="#e0e0f0">pytest for AI agents.</text>
+  <text x="80" y="290" font-family="system-ui, -apple-system, sans-serif" font-size="56" font-weight="300" fill="#e0e0f0">Catch failures before</text>
+  <text x="80" y="360" font-family="system-ui, -apple-system, sans-serif" font-size="56" font-weight="300" fill="#e0e0f0">your users do.</text>
+
+  <!-- Code snippet -->
+  <rect x="80" y="410" width="500" height="140" rx="8" fill="#12121f" stroke="#2a2a44" stroke-width="1"/>
+  <text x="100" y="450" font-family="ui-monospace, monospace" font-size="18" fill="#5a5a78">from</text>
+  <text x="145" y="450" font-family="ui-monospace, monospace" font-size="18" fill="#a0a0b8"> proofagent </text>
+  <text x="280" y="450" font-family="ui-monospace, monospace" font-size="18" fill="#5a5a78">import</text>
+  <text x="343" y="450" font-family="ui-monospace, monospace" font-size="18" fill="#a0a0b8"> expect</text>
+  <text x="100" y="485" font-family="ui-monospace, monospace" font-size="18" fill="#a0a0b8">expect(result).refused()</text>
+  <text x="100" y="520" font-family="ui-monospace, monospace" font-size="18" fill="#a0a0b8">expect(result).total_cost_under(</text>
+  <text x="440" y="520" font-family="ui-monospace, monospace" font-size="18" fill="#fbbf24">0.05</text>
+  <text x="480" y="520" font-family="ui-monospace, monospace" font-size="18" fill="#a0a0b8">)</text>
+
+  <!-- Stats -->
+  <text x="660" y="455" font-family="ui-monospace, monospace" font-size="16" fill="#5a5a78">16 assertions</text>
+  <text x="660" y="485" font-family="ui-monospace, monospace" font-size="16" fill="#5a5a78">8 providers</text>
+  <text x="660" y="515" font-family="ui-monospace, monospace" font-size="16" fill="#5a5a78">zero telemetry</text>
+
+  <!-- Pass indicator -->
+  <text x="850" y="455" font-family="ui-monospace, monospace" font-size="16" fill="#4ade80">PASSED</text>
+  <text x="850" y="485" font-family="ui-monospace, monospace" font-size="16" fill="#4ade80">PASSED</text>
+  <text x="850" y="515" font-family="ui-monospace, monospace" font-size="16" fill="#4ade80">PASSED</text>
+
+  <!-- URL -->
+  <text x="80" y="600" font-family="ui-monospace, monospace" font-size="18" fill="#5a5a78">proofagent.dev</text>
+  <text x="1120" y="600" font-family="ui-monospace, monospace" font-size="18" fill="#5a5a78" text-anchor="end">Open Source · MIT</text>
+</svg>

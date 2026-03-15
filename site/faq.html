@@ -6,6 +6,11 @@
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <title>FAQ — proofagent</title>
 <meta name="description" content="Frequently asked questions about proofagent — the open-source pytest plugin for testing AI agents.">
+<meta property="og:title" content="FAQ — proofagent">
+<meta property="og:description" content="Frequently asked questions about proofagent.">
+<meta property="og:image" content="https://proofagent.dev/og.svg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://proofagent.dev/og.svg">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
@@ -224,9 +229,9 @@
   <nav>
     <a href="/" class="nav-brand"><svg class="nav-logo" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" rx="3" fill="currentColor"/><path d="M8 17 L13 22 L24 11" stroke="var(--bg)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>proofagent</a>
     <ul class="nav-links">
+      <li><a href="/leaderboard">Leaderboard</a></li>
+      <li><a href="/cost-calculator">Cost Calculator</a></li>
       <li><a href="/use-cases">Use Cases</a></li>
-      <li><a href="/how-it-works">How It Works</a></li>
-      <li><a href="/faq">FAQ</a></li>
       <li><a href="https://github.com/camgitt/proofagent">GitHub</a></li>
     </ul>
   </nav>
@@ -299,7 +304,7 @@
     <div class="faq-item">
       <h3>How do I compare two models?</h3>
       <p>Use the <code>proofagent_compare</code> fixture or the CLI:</p>
-      <pre>proofagent compare --model-a gpt-4o --model-b claude-sonnet-4-6 "Explain gravity"</pre>
+      <pre>proofagent compare --model-a gpt-5.4 --model-b claude-sonnet-4-6 "Explain gravity"</pre>
       <p>This runs the same prompt on both models and shows a side-by-side comparison of output, cost, and latency.</p>
     </div>
 

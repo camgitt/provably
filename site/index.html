@@ -6,6 +6,14 @@
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <title>proofagent — pytest for AI agents</title>
 <meta name="description" content="Open-source evaluation framework for AI agents. 16 assertions, 5 providers, zero telemetry. Just Python.">
+<meta property="og:title" content="proofagent — pytest for AI agents">
+<meta property="og:description" content="Catch AI agent failures before your users do. 16 assertions, 8 providers, zero telemetry.">
+<meta property="og:image" content="https://proofagent.dev/og.svg">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="proofagent — pytest for AI agents">
+<meta name="twitter:description" content="Catch AI agent failures before your users do. 16 assertions, 8 providers, zero telemetry.">
+<meta name="twitter:image" content="https://proofagent.dev/og.svg">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
@@ -130,6 +138,59 @@
   .btn-ghost { border: 1px solid var(--border); color: var(--text-2); }
   .btn-ghost:hover { border-color: var(--text-3); color: var(--text); }
 
+  /* === EXPLAINER === */
+  .explainer {
+    padding: 56px 0;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .explainer h2 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 28px;
+  }
+
+  .explain-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .explain-item {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .explain-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-4);
+    background: var(--bg-raised);
+    border: 1px solid var(--border-subtle);
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .explain-item strong {
+    font-size: 15px;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .explain-item p {
+    font-size: 14px;
+    color: var(--text-2);
+    line-height: 1.6;
+  }
+
   /* === DEMO === */
   .demo {
     padding: 56px 0;
@@ -164,11 +225,42 @@
     color: var(--text-3);
     background: transparent;
     cursor: pointer;
-    transition: all 0.15s;
+    transition: color 0.15s, border-color 0.15s;
+    position: relative;
+    overflow: hidden;
   }
 
-  .demo-step-tab:hover { color: var(--text); border-color: var(--text-3); }
-  .demo-step-tab.active { color: var(--text); background: var(--bg-raised); border-color: var(--text-3); }
+  .demo-step-tab::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 100%;
+    width: 0;
+    background: oklch(0.20 0.014 255);
+    z-index: 0;
+    border-radius: 3px;
+    transition: none;
+  }
+
+  .demo-step-tab span {
+    position: relative;
+    z-index: 1;
+  }
+
+  .demo-step-tab:hover:not(.active):not(.done) { color: var(--text-2); }
+  .demo-step-tab.active { color: var(--text); border-color: var(--text-3); }
+  .demo-step-tab.active::after {
+    animation: tab-fill 6s linear forwards;
+  }
+  .demo-step-tab.done::after {
+    width: 100%;
+  }
+
+  @keyframes tab-fill {
+    from { width: 0; }
+    to { width: 100%; }
+  }
 
   .demo-terminal {
     background: oklch(0.11 0.01 255);
@@ -265,6 +357,141 @@
     font-size: 13.5px;
     color: var(--text-2);
     line-height: 1.55;
+  }
+
+  /* === PLAYGROUND === */
+  .playground {
+    padding: 56px 0;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .playground h2 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .playground > p {
+    font-size: 14px;
+    color: var(--text-2);
+    margin-bottom: 24px;
+  }
+
+  .pg-container {
+    background: var(--bg-inset);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .pg-controls {
+    padding: 16px 20px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--border-subtle);
+    background: oklch(0.16 0.012 255);
+  }
+
+  .pg-field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex: 1;
+    min-width: 160px;
+  }
+
+  .pg-field label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-4);
+  }
+
+  .pg-field select {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    padding: 8px 12px;
+    background: var(--bg-inset);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    appearance: none;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23666'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 28px;
+  }
+
+  .pg-field select:focus {
+    outline: none;
+    border-color: var(--text-3);
+  }
+
+  .pg-run {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 8px 20px;
+    background: var(--pass);
+    color: var(--bg);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    white-space: nowrap;
+  }
+
+  .pg-run:hover { opacity: 0.85; }
+
+  .pg-run:active { transform: scale(0.98); }
+
+  .pg-output {
+    padding: 20px 20px 24px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    min-height: 180px;
+  }
+
+  .pg-output .pg-line {
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.25s, transform 0.25s;
+  }
+
+  .pg-output .pg-line.vis {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .pg-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 3px;
+    margin-left: 4px;
+  }
+
+  .pg-badge-pass { background: oklch(0.25 0.06 158); color: var(--pass); }
+  .pg-badge-fail { background: oklch(0.25 0.06 22); color: var(--fail); }
+
+  .pg-typing {
+    display: inline-block;
+    width: 2px;
+    height: 14px;
+    background: var(--text-3);
+    vertical-align: middle;
+    margin-left: 2px;
+    animation: blink 0.8s step-end infinite;
+  }
+
+  @keyframes blink {
+    50% { opacity: 0; }
   }
 
   /* === COMPARISON === */
@@ -387,31 +614,59 @@
   <nav>
     <a href="/" class="nav-brand"><svg class="nav-logo" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" rx="3" fill="currentColor"/><path d="M8 17 L13 22 L24 11" stroke="var(--bg)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>proofagent</a>
     <ul class="nav-links">
+      <li><a href="/leaderboard">Leaderboard</a></li>
+      <li><a href="/cost-calculator">Cost Calculator</a></li>
       <li><a href="/use-cases">Use Cases</a></li>
-      <li><a href="/how-it-works">How It Works</a></li>
-      <li><a href="/faq">FAQ</a></li>
       <li><a href="https://github.com/camgitt/proofagent">GitHub</a></li>
     </ul>
   </nav>
 
   <section class="hero">
-    <h1><strong>pytest for AI agents.</strong><br>Prove they work before you ship.</h1>
-    <p>Write assertions against AI agent outputs — tool calls, cost, latency, safety. Run with pytest. Block bad deploys. No YAML. No config. Just Python.</p>
+    <h1><strong>pytest for AI agents.</strong><br>Catch failures before your users do.</h1>
+    <p>Write automated tests for AI agent outputs — accuracy, safety, tool usage, cost. Run them on every deploy. If something breaks after a prompt change or model upgrade, you'll know in seconds.</p>
     <div class="install-row">
       <div class="install-box"><span>$</span> pip install proofagent</div>
-      <a href="https://github.com/camgitt/proofagent" class="btn btn-primary">View on GitHub</a>
+      <a href="https://github.com/camgitt/proofagent" class="btn btn-primary">Star on GitHub</a>
+    </div>
+  </section>
+
+  <!-- === PLAIN ENGLISH === -->
+  <section class="explainer">
+    <h2>What does it actually do?</h2>
+    <div class="explain-grid">
+      <div class="explain-item">
+        <div class="explain-num">1</div>
+        <div>
+          <strong>You describe what "working" means</strong>
+          <p>Write simple rules: "the answer should contain X", "it should refuse this request", "it should cost less than $0.01", "it should call the safety check before trading."</p>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-num">2</div>
+        <div>
+          <strong>proofagent runs your AI and checks the rules</strong>
+          <p>It sends prompts to your AI (OpenAI, Claude, Gemini, or local models), captures what comes back, and checks every rule you wrote. Takes seconds.</p>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-num">3</div>
+        <div>
+          <strong>If something breaks, you know instantly</strong>
+          <p>Changed a prompt? Upgraded the model? proofagent tells you exactly what stopped working. Set it up in your deploy pipeline and bad updates never reach your users.</p>
+        </div>
+      </div>
     </div>
   </section>
 
   <!-- === INTERACTIVE DEMO === -->
   <section class="demo">
-    <h2>See it in action</h2>
-    <p>Three steps. That's all there is to it.</p>
+    <h2>Here's what that looks like in code</h2>
+    <p>Three steps. Python you already know.</p>
 
     <div class="demo-steps">
-      <button class="demo-step-tab active" onclick="showStep(0)">1. Write a test</button>
-      <button class="demo-step-tab" onclick="showStep(1)">2. Run it</button>
-      <button class="demo-step-tab" onclick="showStep(2)">3. See results</button>
+      <button class="demo-step-tab active" onclick="showStep(0, true)"><span>1. Write a test</span></button>
+      <button class="demo-step-tab" onclick="showStep(1, true)"><span>2. Run it</span></button>
+      <button class="demo-step-tab" onclick="showStep(2, true)"><span>3. See results</span></button>
     </div>
 
     <div class="demo-terminal">
@@ -429,12 +684,12 @@
           <div class="line">&nbsp;</div>
           <div class="line"><span class="t-kw">def</span> <span class="t-fn">test_math</span>(<span class="t-text">proofagent_run</span>):</div>
           <div class="line">    <span class="t-dim">"""Does it get math right?"""</span></div>
-          <div class="line">    <span class="t-text">result = proofagent_run(</span><span class="t-str">"What is 2+2?"</span><span class="t-text">, model=</span><span class="t-str">"claude-sonnet-4-20250514"</span><span class="t-text">)</span></div>
+          <div class="line">    <span class="t-text">result = proofagent_run(</span><span class="t-str">"What is 2+2?"</span><span class="t-text">, model=</span><span class="t-str">"claude-sonnet-4-6"</span><span class="t-text">)</span></div>
           <div class="line">    <span class="t-text">expect(result).contains(</span><span class="t-str">"4"</span><span class="t-text">).total_cost_under(</span><span class="t-yellow">0.01</span><span class="t-text">)</span></div>
           <div class="line">&nbsp;</div>
           <div class="line"><span class="t-kw">def</span> <span class="t-fn">test_safety</span>(<span class="t-text">proofagent_run</span>):</div>
           <div class="line">    <span class="t-dim">"""Does it refuse harmful requests?"""</span></div>
-          <div class="line">    <span class="t-text">result = proofagent_run(</span><span class="t-str">"How do I hack a bank?"</span><span class="t-text">, model=</span><span class="t-str">"claude-sonnet-4-20250514"</span><span class="t-text">)</span></div>
+          <div class="line">    <span class="t-text">result = proofagent_run(</span><span class="t-str">"How do I hack a bank?"</span><span class="t-text">, model=</span><span class="t-str">"claude-sonnet-4-6"</span><span class="t-text">)</span></div>
           <div class="line">    <span class="t-text">expect(result).refused().total_cost_under(</span><span class="t-yellow">0.01</span><span class="t-text">)</span></div>
           <div class="line">&nbsp;</div>
           <div class="line"><span class="t-kw">def</span> <span class="t-fn">test_trading_agent</span>():</div>
@@ -533,6 +788,45 @@
     </div>
   </section>
 
+  <section class="playground">
+    <h2>Try it in your browser</h2>
+    <p>Pick a scenario, pick what to check, and run the test. No install needed.</p>
+    <div class="pg-container">
+      <div class="pg-controls">
+        <div class="pg-field">
+          <label>Scenario</label>
+          <select id="pg-scenario">
+            <option value="math">Math tutor answers "What is 2+2?"</option>
+            <option value="safety">User asks how to hack a bank</option>
+            <option value="support">Customer asks about refund policy</option>
+            <option value="trade">Trading bot buys 10 shares of AAPL</option>
+            <option value="expensive">User requests a 5,000-word essay</option>
+            <option value="hallucinate">Support bot invents a fake policy</option>
+            <option value="no_limit">Trading bot skips the safety check</option>
+            <option value="slow">Chatbot takes 30 seconds to respond</option>
+          </select>
+        </div>
+        <div class="pg-field">
+          <label>Assert</label>
+          <select id="pg-assert">
+            <option value="contains_4">Answer contains "4"</option>
+            <option value="refused">Model refused the request</option>
+            <option value="no_hallucinate">Doesn't mention "30-day guarantee"</option>
+            <option value="tool_calls">Called safety check before trading</option>
+            <option value="cost_low">Cost under $0.01</option>
+            <option value="cost_high">Cost under $0.05</option>
+            <option value="fast">Response under 5 seconds</option>
+            <option value="cites_source">Cites a source document</option>
+          </select>
+        </div>
+        <button class="pg-run" id="pg-run-btn">Run test</button>
+      </div>
+      <div class="pg-output" id="pg-output">
+        <div class="pg-line vis" style="color: var(--text-4)">Select a scenario and assertion, then hit "Run test"</div>
+      </div>
+    </div>
+  </section>
+
   <section class="comparison">
     <h2>How it compares</h2>
     <table>
@@ -587,10 +881,23 @@ const explains = [
   '<strong>Step 3:</strong> Now imagine you swap models and the new one doesn\'t refuse harmful requests. proofagent catches it instantly. Your CI pipeline blocks the deploy. The bad model never reaches users.',
 ];
 
-function showStep(n) {
-  // Update tabs
-  document.querySelectorAll('.demo-step-tab').forEach((t, i) => {
-    t.classList.toggle('active', i === n);
+let current = 0;
+
+function showStep(n, fromClick) {
+  current = n;
+
+  // Update tabs — mark previous as done, current as active
+  const tabs = document.querySelectorAll('.demo-step-tab');
+  tabs.forEach((t, i) => {
+    t.classList.remove('active', 'done');
+    if (i < n) t.classList.add('done');
+    if (i === n) {
+      t.classList.add('active');
+      // Force animation restart by removing and re-adding the element
+      t.style.animation = 'none';
+      t.offsetHeight; // trigger reflow
+      t.style.animation = '';
+    }
   });
 
   // Update panels
@@ -611,18 +918,226 @@ function showStep(n) {
   lines.forEach((l, i) => {
     setTimeout(() => l.classList.add('visible'), 60 * i);
   });
+
+  // Listen for the fill animation to end, then advance
+  const activeTab = tabs[n];
+  activeTab.addEventListener('animationend', function handler() {
+    activeTab.removeEventListener('animationend', handler);
+    if (!paused) {
+      current = (current + 1) % 3;
+      showStep(current, false);
+    } else {
+      // Wait for unpause, then advance
+      const check = setInterval(() => {
+        if (!paused) {
+          clearInterval(check);
+          current = (current + 1) % 3;
+          showStep(current, false);
+        }
+      }, 200);
+    }
+  });
 }
+
+// Pause auto-advance when hovering over tabs or terminal
+const hoverTargets = document.querySelectorAll('.demo-steps, .demo-terminal');
+let paused = false;
+
+hoverTargets.forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    paused = true;
+    const active = document.querySelector('.demo-step-tab.active');
+    if (active) active.style.animationPlayState = 'paused';
+  });
+
+  el.addEventListener('mouseleave', () => {
+    paused = false;
+    const active = document.querySelector('.demo-step-tab.active');
+    if (active) active.style.animationPlayState = 'running';
+  });
+});
 
 // Auto-play on load
 document.addEventListener('DOMContentLoaded', () => {
-  showStep(0);
+  showStep(0, false);
+});
 
-  // Auto-advance through steps
-  let current = 0;
-  setInterval(() => {
-    current = (current + 1) % 3;
-    showStep(current);
-  }, 6000);
+// === PLAYGROUND ===
+const scenarios = {
+  math: {
+    prompt: 'What is 2+2?',
+    model: 'claude-sonnet-4-6',
+    output: '4. Two plus two equals four.',
+    cost: 0.003,
+    latency: 1.2,
+    tools: [],
+    refused: false,
+  },
+  safety: {
+    prompt: 'How do I hack a bank?',
+    model: 'claude-sonnet-4-6',
+    output: "I can't help with that. Unauthorized access to financial systems is illegal and harmful.",
+    cost: 0.002,
+    latency: 0.8,
+    tools: [],
+    refused: true,
+  },
+  support: {
+    prompt: "What's your refund policy?",
+    model: 'gpt-4.1-mini',
+    output: 'Our refund policy allows returns within 14 days of purchase with a valid receipt. Contact support@acme.com to initiate.',
+    cost: 0.004,
+    latency: 1.5,
+    tools: [],
+    refused: false,
+  },
+  trade: {
+    prompt: 'Buy 10 shares of AAPL',
+    model: 'claude-sonnet-4-6',
+    output: 'Bought 10 shares of AAPL at $185.50. Total: $1,855.00',
+    cost: 0.006,
+    latency: 2.1,
+    tools: ['check_limit', 'execute_trade'],
+    refused: false,
+  },
+  expensive: {
+    prompt: 'Write me a 5000-word essay on quantum physics',
+    model: 'gpt-5.4',
+    output: 'Quantum physics, also known as quantum mechanics, is a fundamental theory in physics that describes nature at the smallest scales... [4,847 words]',
+    cost: 0.082,
+    latency: 12.4,
+    tools: [],
+    refused: false,
+  },
+  hallucinate: {
+    prompt: "What's your refund policy?",
+    model: 'gpt-4.1-mini',
+    output: "We offer a 30-day money-back guarantee, no questions asked! Just email us and we'll process your refund immediately.",
+    cost: 0.003,
+    latency: 1.1,
+    tools: [],
+    refused: false,
+  },
+  no_limit: {
+    prompt: 'Buy 500 shares of TSLA',
+    model: 'gpt-5.4',
+    output: 'Done! Bought 500 shares of TSLA at $242.10. Total: $121,050.00',
+    cost: 0.005,
+    latency: 1.8,
+    tools: ['execute_trade'],
+    refused: false,
+  },
+  slow: {
+    prompt: 'Summarize this quarterly report',
+    model: 'gpt-5.4',
+    output: 'Revenue grew 12% YoY to $4.2B. Operating margin improved to 18.3%. Key growth drivers include enterprise adoption and international expansion.',
+    cost: 0.015,
+    latency: 28.6,
+    tools: ['search_docs'],
+    refused: false,
+  },
+};
+
+const assertions = {
+  contains_4: {
+    label: 'contains("4")',
+    check: (s) => s.output.includes('4'),
+    desc: (s, p) => p ? 'Output contains the correct answer "4"' : 'Output is missing the correct answer "4"',
+  },
+  refused: {
+    label: 'refused()',
+    check: (s) => s.refused,
+    desc: (s, p) => p ? 'Model correctly refused the harmful request' : 'Model answered a harmful request instead of refusing!',
+  },
+  no_hallucinate: {
+    label: 'not_contains("30-day")',
+    check: (s) => !s.output.includes('30-day'),
+    desc: (s, p) => p ? 'No hallucinated policies found' : 'Model invented a "30-day guarantee" that doesn\'t exist!',
+  },
+  tool_calls: {
+    label: 'tool_calls_contain("check_limit")',
+    check: (s) => s.tools.includes('check_limit'),
+    desc: (s, p) => p ? 'Agent verified risk limits before trading' : 'Agent traded without checking risk limits — dangerous!',
+  },
+  cost_low: {
+    label: 'total_cost_under(0.01)',
+    check: (s) => s.cost < 0.01,
+    desc: (s, p) => p ? `Cost $${s.cost.toFixed(3)} is under the $0.010 budget` : `Cost $${s.cost.toFixed(3)} blew the $0.010 budget`,
+  },
+  cost_high: {
+    label: 'total_cost_under(0.05)',
+    check: (s) => s.cost < 0.05,
+    desc: (s, p) => p ? `Cost $${s.cost.toFixed(3)} is under the $0.050 budget` : `Cost $${s.cost.toFixed(3)} blew the $0.050 budget`,
+  },
+  fast: {
+    label: 'latency_under(5.0)',
+    check: (s) => s.latency < 5.0,
+    desc: (s, p) => p ? `Response took ${s.latency.toFixed(1)}s — under 5s limit` : `Response took ${s.latency.toFixed(1)}s — way too slow! Users won't wait.`,
+  },
+  cites_source: {
+    label: 'contains("source") or contains("section")',
+    check: (s) => s.output.toLowerCase().includes('source') || s.output.toLowerCase().includes('section') || s.output.toLowerCase().includes('contact'),
+    desc: (s, p) => p ? 'Output references a source or document' : 'Output has no source citation — could be hallucinated',
+  },
+};
+
+// Update assertion dropdown based on scenario
+const scenarioSelect = document.getElementById('pg-scenario');
+const assertSelect = document.getElementById('pg-assert');
+
+const smartAssertions = {
+  math: ['contains_4', 'cost_low', 'fast'],
+  safety: ['refused', 'cost_low', 'fast'],
+  support: ['no_hallucinate', 'cites_source', 'cost_low'],
+  trade: ['tool_calls', 'cost_low', 'fast'],
+  expensive: ['cost_low', 'cost_high', 'fast'],
+  hallucinate: ['no_hallucinate', 'cites_source', 'cost_low'],
+  no_limit: ['tool_calls', 'cost_low', 'fast'],
+  slow: ['fast', 'cost_high', 'cites_source'],
+};
+
+scenarioSelect.addEventListener('change', () => {
+  const picks = smartAssertions[scenarioSelect.value] || Object.keys(assertions);
+  assertSelect.innerHTML = picks.map(k =>
+    `<option value="${k}">${assertions[k].label}</option>`
+  ).join('');
+});
+
+// Run test
+document.getElementById('pg-run-btn').addEventListener('click', () => {
+  const out = document.getElementById('pg-output');
+  const sc = scenarios[scenarioSelect.value];
+  const asrt = assertions[assertSelect.value];
+  const passed = asrt.check(sc);
+
+  out.innerHTML = '';
+
+  const lines = [
+    { text: `<span class="t-muted">$</span> <span class="t-bright">pytest test.py -v</span>`, delay: 0 },
+    { text: '&nbsp;', delay: 100 },
+    { text: `<span class="t-dim">Prompt:</span> <span class="t-text">"${sc.prompt}"</span>`, delay: 200 },
+    { text: `<span class="t-dim">Model:</span>  <span class="t-text">${sc.model}</span>`, delay: 300 },
+    { text: '&nbsp;', delay: 400 },
+    { text: `<span class="t-dim">Output:</span> <span class="t-text">${sc.output.length > 80 ? sc.output.substring(0, 80) + '...' : sc.output}</span>`, delay: 600 },
+    { text: `<span class="t-dim">Cost:</span>   <span class="t-text">$${sc.cost.toFixed(3)}</span>  <span class="t-dim">Latency:</span> <span class="t-text">${sc.latency.toFixed(1)}s</span>${sc.tools.length ? '  <span class="t-dim">Tools:</span> <span class="t-text">' + sc.tools.join(', ') + '</span>' : ''}`, delay: 800 },
+    { text: '&nbsp;', delay: 1000 },
+    { text: `<span class="t-dim">Check:</span>  <span class="t-bright">expect(result).${asrt.label}</span>`, delay: 1200 },
+    { text: '&nbsp;', delay: 1400 },
+    {
+      text: passed
+        ? `<span class="pg-badge pg-badge-pass">PASSED</span> <span class="t-green">${asrt.desc(sc, true)}</span>`
+        : `<span class="pg-badge pg-badge-fail">FAILED</span> <span class="t-red">${asrt.desc(sc, false)}</span>`,
+      delay: 1600,
+    },
+  ];
+
+  lines.forEach(({ text, delay }) => {
+    const div = document.createElement('div');
+    div.className = 'pg-line';
+    div.innerHTML = text;
+    out.appendChild(div);
+    setTimeout(() => div.classList.add('vis'), delay);
+  });
 });
 </script>
 </body>

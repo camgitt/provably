@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<title>AI Eval Cost Calculator — how much does testing your AI agent cost?</title>
+<meta name="description" content="Calculate the real cost of evaluating your AI agent. Compare prices across Claude, GPT-5.4, Gemini, DeepSeek, and more.">
+<meta property="og:title" content="AI Eval Cost Calculator — how much does testing your AI agent cost?">
+<meta property="og:description" content="Calculate eval costs across 8 AI models. Free tool by proofagent.">
+<meta property="og:image" content="https://proofagent.dev/og.svg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://proofagent.dev/og.svg">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: oklch(0.145 0.012 255);
+    --bg-raised: oklch(0.175 0.014 255);
+    --bg-inset: oklch(0.125 0.01 255);
+    --border: oklch(0.26 0.012 255);
+    --border-subtle: oklch(0.22 0.01 255);
+    --text: oklch(0.92 0.008 255);
+    --text-2: oklch(0.68 0.01 255);
+    --text-3: oklch(0.48 0.008 255);
+    --text-4: oklch(0.36 0.006 255);
+    --pass: oklch(0.70 0.16 158);
+    --fail: oklch(0.68 0.19 22);
+    --warn: oklch(0.76 0.13 80);
+    --accent: oklch(0.62 0.05 255);
+  }
+
+  html { font-size: 16px; }
+  body {
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.6;
+  }
+
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 24px; }
+
+  nav { padding: 24px 0; display: flex; justify-content: space-between; align-items: center; }
+  .nav-brand { font-family: 'IBM Plex Mono', monospace; font-size: 14px; font-weight: 500; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+  .nav-logo { width: 22px; height: 22px; }
+  .nav-links { display: flex; gap: 24px; list-style: none; }
+  .nav-links a { font-size: 13px; color: var(--text-3); text-decoration: none; transition: color 0.15s; }
+  .nav-links a:hover { color: var(--text); }
+
+  .page-header { padding: 64px 0 16px; }
+  .page-header h1 { font-size: 32px; font-weight: 300; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 12px; }
+  .page-header h1 strong { font-weight: 700; }
+  .page-header p { font-size: 15px; color: var(--text-2); max-width: 580px; line-height: 1.65; }
+
+  /* Controls */
+  .controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 40px 0 32px;
+  }
+
+  .control-group { display: flex; flex-direction: column; gap: 6px; }
+
+  .control-group label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-4);
+  }
+
+  .control-group input, .control-group select {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    background: var(--bg-inset);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 10px 14px;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .control-group input:focus, .control-group select:focus {
+    border-color: var(--text-3);
+  }
+
+  .control-group select option { background: var(--bg-raised); }
+
+  .control-full { grid-column: 1 / -1; }
+
+  .slider-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .slider-row input[type="range"] {
+    flex: 1;
+    -webkit-appearance: none;
+    background: var(--border);
+    height: 4px;
+    border-radius: 2px;
+    border: none;
+    padding: 0;
+  }
+
+  .slider-row input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    background: var(--text);
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  .slider-val {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    color: var(--text);
+    min-width: 48px;
+    text-align: right;
+  }
+
+  /* Results table */
+  .results { margin: 0 0 48px; }
+  .results h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+
+  .cost-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .cost-table th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-4);
+    padding: 10px 14px;
+    text-align: left;
+    background: var(--bg-raised);
+    border-bottom: 1px solid var(--border);
+    font-weight: 500;
+  }
+
+  .cost-table th:nth-child(n+2) { text-align: right; }
+
+  .cost-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border-subtle);
+    font-size: 13px;
+    color: var(--text-2);
+  }
+
+  .cost-table td:nth-child(n+2) {
+    text-align: right;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+  }
+
+  .cost-table tr:last-child td { border-bottom: none; }
+  .cost-table td:first-child { color: var(--text); font-weight: 500; }
+
+  .cheapest td { color: var(--pass) !important; }
+
+  .cost-bar {
+    display: inline-block;
+    height: 6px;
+    background: var(--accent);
+    border-radius: 3px;
+    margin-left: 8px;
+    vertical-align: middle;
+    transition: width 0.4s ease-out;
+  }
+
+  /* Summary cards */
+  .summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 0 0 48px;
+  }
+
+  .summary-card {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 20px;
+  }
+
+  .summary-card .label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-4);
+    margin-bottom: 6px;
+  }
+
+  .summary-card .value {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .summary-card .sub {
+    font-size: 12px;
+    color: var(--text-3);
+    margin-top: 4px;
+  }
+
+  /* Breakeven */
+  .breakeven {
+    padding: 32px 0 48px;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .breakeven h2 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+  .breakeven p { font-size: 14px; color: var(--text-2); line-height: 1.65; margin-bottom: 16px; }
+
+  .breakeven-math {
+    background: var(--bg-inset);
+    border: 1px solid var(--border-subtle);
+    border-radius: 5px;
+    padding: 20px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--text-2);
+    line-height: 2;
+  }
+
+  .breakeven-math .highlight {
+    color: var(--pass);
+    font-weight: 500;
+  }
+
+  /* CTA */
+  .cta { padding: 48px 0; border-top: 1px solid var(--border-subtle); }
+  .cta h2 { font-size: 22px; font-weight: 300; margin-bottom: 8px; }
+  .cta h2 strong { font-weight: 600; }
+  .cta p { color: var(--text-2); font-size: 15px; margin-bottom: 24px; }
+  .cta-buttons { display: flex; gap: 12px; }
+
+  .btn { display: inline-block; font-family: 'IBM Plex Sans', sans-serif; font-size: 13px; font-weight: 500; padding: 10px 20px; border-radius: 5px; text-decoration: none; transition: all 0.15s; }
+  .btn-primary { background: var(--text); color: var(--bg); }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-ghost { border: 1px solid var(--border); color: var(--text-2); }
+  .btn-ghost:hover { border-color: var(--text-3); color: var(--text); }
+
+  footer { padding: 24px 0 40px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; font-size: 12px; color: var(--text-4); }
+  footer a { color: var(--text-3); text-decoration: none; }
+  footer a:hover { color: var(--text); }
+
+  @media (max-width: 600px) {
+    .page-header h1 { font-size: 24px; }
+    .controls { grid-template-columns: 1fr; }
+    .summary { grid-template-columns: 1fr; }
+    .cta-buttons { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav>
+    <a href="/" class="nav-brand"><svg class="nav-logo" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" rx="3" fill="currentColor"/><path d="M8 17 L13 22 L24 11" stroke="var(--bg)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>proofagent</a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/leaderboard">Safety Leaderboard</a></li>
+      <li><a href="/use-cases">Use Cases</a></li>
+      <li><a href="https://github.com/camgitt/proofagent">GitHub</a></li>
+    </ul>
+  </nav>
+
+  <section class="page-header">
+    <h1><strong>How much does it cost</strong> to eval your AI agent?</h1>
+    <p>Enter your eval parameters below and see the real cost across 6 popular models. Most teams are surprised how cheap it is.</p>
+  </section>
+
+  <div class="controls">
+    <div class="control-group">
+      <label>Test cases</label>
+      <div class="slider-row">
+        <input type="range" id="test-count" min="5" max="500" value="50" step="5">
+        <span class="slider-val" id="test-count-val">50</span>
+      </div>
+    </div>
+    <div class="control-group">
+      <label>Avg prompt length</label>
+      <select id="prompt-size">
+        <option value="200">Short (~200 tokens)</option>
+        <option value="500" selected>Medium (~500 tokens)</option>
+        <option value="1500">Long (~1,500 tokens)</option>
+        <option value="4000">Very long (~4,000 tokens)</option>
+      </select>
+    </div>
+    <div class="control-group">
+      <label>Avg response length</label>
+      <select id="response-size">
+        <option value="100">Short (~100 tokens)</option>
+        <option value="300" selected>Medium (~300 tokens)</option>
+        <option value="800">Long (~800 tokens)</option>
+        <option value="2000">Very long (~2,000 tokens)</option>
+      </select>
+    </div>
+    <div class="control-group">
+      <label>Runs per day (CI)</label>
+      <div class="slider-row">
+        <input type="range" id="runs-per-day" min="1" max="50" value="5">
+        <span class="slider-val" id="runs-per-day-val">5</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="summary" id="summary"></div>
+
+  <div class="results">
+    <h2>Cost per model</h2>
+    <table class="cost-table">
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>Per test</th>
+          <th>Per run</th>
+          <th>Per month</th>
+        </tr>
+      </thead>
+      <tbody id="cost-body"></tbody>
+    </table>
+  </div>
+
+  <section class="breakeven" id="breakeven"></section>
+
+  <section class="cta">
+    <h2><strong>Start evaluating today</strong></h2>
+    <p>proofagent runs your eval suite in seconds. Add it to CI and never ship a broken agent again.</p>
+    <div class="cta-buttons">
+      <a href="https://github.com/camgitt/proofagent" class="btn btn-primary">Get proofagent</a>
+      <a href="/leaderboard" class="btn btn-ghost">Safety Leaderboard</a>
+      <a href="/" class="btn btn-ghost">Home</a>
+    </div>
+  </section>
+
+  <footer>
+    <span>proofagent &mdash; MIT License</span>
+    <span><a href="https://github.com/camgitt/proofagent">source</a> &middot; <a href="https://pypi.org/project/proofagent/">pypi</a></span>
+  </footer>
+
+</div>
+
+<script>
+// Pricing per 1M tokens (input/output) — March 2026 approximate
+const models = [
+  { name: 'Claude Sonnet 4.6',  input: 3.00,  output: 15.00 },
+  { name: 'GPT-5.4',            input: 2.50,  output: 15.00 },
+  { name: 'Gemini 3.1 Pro',     input: 2.00,  output: 12.00 },
+  { name: 'GPT-4.1 mini',       input: 0.40,  output: 1.60  },
+  { name: 'DeepSeek V3.2',      input: 0.28,  output: 0.42  },
+  { name: 'Claude Haiku 4.5',   input: 0.25,  output: 1.25  },
+  { name: 'Llama 4 Maverick',   input: 0.15,  output: 0.60  },
+  { name: 'Gemini 3 Flash',     input: 0.50,  output: 3.00  },
+];
+
+const testCountEl = document.getElementById('test-count');
+const testCountVal = document.getElementById('test-count-val');
+const promptSizeEl = document.getElementById('prompt-size');
+const responseSizeEl = document.getElementById('response-size');
+const runsPerDayEl = document.getElementById('runs-per-day');
+const runsPerDayVal = document.getElementById('runs-per-day-val');
+const costBody = document.getElementById('cost-body');
+const summaryEl = document.getElementById('summary');
+const breakevenEl = document.getElementById('breakeven');
+
+function calculate() {
+  const tests = parseInt(testCountEl.value);
+  const inputTokens = parseInt(promptSizeEl.value);
+  const outputTokens = parseInt(responseSizeEl.value);
+  const runsDay = parseInt(runsPerDayEl.value);
+
+  testCountVal.textContent = tests;
+  runsPerDayVal.textContent = runsDay;
+
+  const results = models.map(m => {
+    const costPerTest = (inputTokens * m.input + outputTokens * m.output) / 1_000_000;
+    const costPerRun = costPerTest * tests;
+    const costPerMonth = costPerRun * runsDay * 30;
+    return { ...m, costPerTest, costPerRun, costPerMonth };
+  });
+
+  const maxMonth = Math.max(...results.map(r => r.costPerMonth));
+  const minMonth = Math.min(...results.map(r => r.costPerMonth));
+  const cheapest = results.find(r => r.costPerMonth === minMonth);
+  const mostExpensive = results.find(r => r.costPerMonth === maxMonth);
+
+  // Render table
+  costBody.innerHTML = results.map(r => {
+    const barW = maxMonth > 0 ? Math.round((r.costPerMonth / maxMonth) * 120) : 0;
+    const isCheapest = r.costPerMonth === minMonth ? ' cheapest' : '';
+    return `<tr class="${isCheapest}">
+      <td>${r.name}</td>
+      <td>$${r.costPerTest < 0.001 ? r.costPerTest.toFixed(5) : r.costPerTest.toFixed(4)}</td>
+      <td>$${r.costPerRun < 0.01 ? r.costPerRun.toFixed(4) : r.costPerRun.toFixed(2)}</td>
+      <td>$${r.costPerMonth.toFixed(2)}<span class="cost-bar" style="width:${barW}px"></span></td>
+    </tr>`;
+  }).join('');
+
+  // Summary cards
+  summaryEl.innerHTML = `
+    <div class="summary-card">
+      <div class="label">Cheapest option</div>
+      <div class="value">$${cheapest.costPerMonth.toFixed(2)}</div>
+      <div class="sub">${cheapest.name} / month</div>
+    </div>
+    <div class="summary-card">
+      <div class="label">Most expensive</div>
+      <div class="value">$${mostExpensive.costPerMonth.toFixed(2)}</div>
+      <div class="sub">${mostExpensive.name} / month</div>
+    </div>
+    <div class="summary-card">
+      <div class="label">Total tests / month</div>
+      <div class="value">${(tests * runsDay * 30).toLocaleString()}</div>
+      <div class="sub">${tests} tests × ${runsDay} runs × 30 days</div>
+    </div>
+  `;
+
+  // Breakeven calculation
+  const bugCost = 500; // Average cost of a production AI bug
+  const avgMonthly = results.reduce((s, r) => s + r.costPerMonth, 0) / results.length;
+  const bugsToBreakeven = avgMonthly / bugCost;
+  breakevenEl.innerHTML = `
+    <h2>Is it worth it?</h2>
+    <p>The average production AI bug costs a team $500+ in engineer time, user trust, and incident response. Here's the math:</p>
+    <div class="breakeven-math">
+      Average eval cost: <span class="highlight">$${avgMonthly.toFixed(2)}/month</span><br>
+      Cost of 1 production bug: ~$500<br>
+      Bugs caught to break even: <span class="highlight">${bugsToBreakeven < 1 ? 'less than 1' : bugsToBreakeven.toFixed(1)}</span> per month<br><br>
+      If evals catch <span class="highlight">just ${bugsToBreakeven < 1 ? '1 bug' : Math.ceil(bugsToBreakeven) + ' bugs'}</span> per month, they pay for themselves.
+    </div>
+  `;
+}
+
+// Bind events
+[testCountEl, runsPerDayEl].forEach(el => el.addEventListener('input', calculate));
+[promptSizeEl, responseSizeEl].forEach(el => el.addEventListener('change', calculate));
+
+// Initial render
+calculate();
+</script>
+</body>
+</html>
