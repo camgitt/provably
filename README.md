@@ -11,6 +11,10 @@
 
 ---
 
+<p align="center">
+  <img src="https://proofagent.dev/demo.svg" alt="proofagent init demo" width="620">
+</p>
+
 Write tests for your AI agents. Check if they give the right answers, refuse dangerous requests, call the right tools, and stay under budget. Run the tests on every deploy. If something breaks, you'll know.
 
 No YAML. No config files. No telemetry. Just Python.

@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="620" height="420" viewBox="0 0 620 420">
+  <style>
+    .bg { fill: #1a1b26; }
+    .bar { fill: #24253a; }
+    .dot-r { fill: #f7768e; }
+    .dot-y { fill: #e0af68; }
+    .dot-g { fill: #9ece6a; }
+    .title { fill: #565a7e; font-family: 'SF Mono', 'Menlo', monospace; font-size: 11px; }
+    .prompt { fill: #565a7e; font-family: 'SF Mono', 'Menlo', monospace; font-size: 13px; }
+    .cmd { fill: #c0caf5; font-family: 'SF Mono', 'Menlo', monospace; font-size: 13px; font-weight: 600; }
+    .dim { fill: #565a7e; font-family: 'SF Mono', 'Menlo', monospace; font-size: 13px; }
+    .text { fill: #a9b1d6; font-family: 'SF Mono', 'Menlo', monospace; font-size: 13px; }
+    .green { fill: #9ece6a; font-family: 'SF Mono', 'Menlo', monospace; font-size: 13px; }
+    .bright { fill: #c0caf5; font-family: 'SF Mono', 'Menlo', monospace; font-size: 13px; }
+    .cyan { fill: #7dcfff; font-family: 'SF Mono', 'Menlo', monospace; font-size: 13px; }
+    .yellow { fill: #e0af68; font-family: 'SF Mono', 'Menlo', monospace; font-size: 13px; }
+    .bold { font-weight: 600; }
+  </style>
+
+  <!-- Terminal window -->
+  <rect class="bg" width="620" height="420" rx="8"/>
+  <rect class="bar" width="620" height="36" rx="8 8 0 0"/>
+  <circle class="dot-r" cx="20" cy="18" r="5.5"/>
+  <circle class="dot-y" cx="38" cy="18" r="5.5"/>
+  <circle class="dot-g" cx="56" cy="18" r="5.5"/>
+  <text class="title" x="80" y="22">Terminal</text>
+
+  <!-- Line 1: pip install -->
+  <text y="64" x="20">
+    <tspan class="prompt">$ </tspan><tspan class="cmd">pip install proofagent</tspan>
+  </text>
+
+  <!-- Line 2: proofagent init -->
+  <text y="88" x="20">
+    <tspan class="prompt">$ </tspan><tspan class="cmd">proofagent init</tspan>
+  </text>
+
+  <!-- Line 3: blank -->
+
+  <!-- Line 4: question -->
+  <text class="bright" y="120" x="20" font-weight="600">  proofagent init</text>
+
+  <!-- Line 5: What do you want -->
+  <text class="text" y="148" x="20">  What do you want to test?</text>
+
+  <!-- Line 6-9: options -->
+  <text y="172" x="20">
+    <tspan class="cyan">    1</tspan><tspan class="text">  Safety</tspan>
+  </text>
+  <text y="192" x="20">
+    <tspan class="cyan">    2</tspan><tspan class="text">  Accuracy</tspan>
+  </text>
+  <text y="212" x="20">
+    <tspan class="cyan">    3</tspan><tspan class="text">  Tool use</tspan>
+  </text>
+  <text y="232" x="20">
+    <tspan class="cyan">    4</tspan><tspan class="text">  All of the above</tspan>
+  </text>
+
+  <!-- Line 10: Pick -->
+  <text y="260" x="20">
+    <tspan class="text">  Pick one [4]: </tspan><tspan class="bright">4</tspan>
+  </text>
+
+  <!-- Line 11: Created -->
+  <text y="284" x="20">
+    <tspan class="text">  Created </tspan><tspan class="bright" font-weight="600">test_my_agent.py</tspan>
+  </text>
+
+  <!-- Line 12: separator -->
+  <text class="dim" y="312" x="20">  ══════════════════ test session starts ══════════════════</text>
+
+  <!-- Line 13-15: tests -->
+  <text y="336" x="20">
+    <tspan class="text">  test_my_agent.py::test_refusal </tspan><tspan class="green" font-weight="600">PASSED</tspan>
+  </text>
+  <text y="356" x="20">
+    <tspan class="text">  test_my_agent.py::test_correct_answer </tspan><tspan class="green" font-weight="600">PASSED</tspan>
+  </text>
+  <text y="376" x="20">
+    <tspan class="text">  test_my_agent.py::test_tool_usage </tspan><tspan class="green" font-weight="600">PASSED</tspan>
+  </text>
+
+  <!-- Line 16: summary -->
+  <text y="400" x="20">
+    <tspan class="green" font-weight="600">  3 passed</tspan><tspan class="dim"> in 0.01s</tspan>
+  </text>
+</svg>
