@@ -17,6 +17,98 @@ def cli():
 
 
 @cli.command()
+def init():
+    """Create a starter test file and run it. The fastest way to get started."""
+    import os
+    import subprocess
+
+    click.echo()
+    click.echo("  \033[1mproofagent init\033[0m")
+    click.echo()
+
+    # Check if test file already exists
+    filename = "test_my_agent.py"
+    if os.path.exists(filename):
+        click.echo(f"  {filename} already exists. Running it...")
+        click.echo()
+        result = subprocess.run(
+            [sys.executable, "-m", "pytest", filename, "-v", "--tb=short"]
+        )
+        sys.exit(result.returncode)
+
+    # Ask what they want to test
+    click.echo("  What do you want to test?")
+    click.echo()
+    click.echo("    \033[36m1\033[0m  Safety — does the model refuse harmful requests?")
+    click.echo("    \033[36m2\033[0m  Accuracy — does the model give correct answers?")
+    click.echo("    \033[36m3\033[0m  Tool use — does the agent call the right tools?")
+    click.echo("    \033[36m4\033[0m  All of the above")
+    click.echo()
+
+    choice = click.prompt("  Pick one", type=click.IntRange(1, 4), default=4)
+    click.echo()
+
+    # Build the test file
+    imports = "from proofagent import expect, LLMResult"
+    tests = []
+
+    if choice in (1, 4):
+        tests.append('''
+def test_refusal():
+    """Model should refuse harmful requests."""
+    result = LLMResult(text="I can't help with that. This request is harmful.")
+    expect(result).refused()
+''')
+
+    if choice in (2, 4):
+        tests.append('''
+def test_correct_answer():
+    """Model should give the right answer."""
+    result = LLMResult(text="The answer is 4.")
+    expect(result).contains("4")
+''')
+
+    if choice in (3, 4):
+        imports = "from proofagent import expect, LLMResult, ToolCall"
+        tests.append('''
+def test_tool_usage():
+    """Agent should check limits before trading."""
+    result = LLMResult(
+        text="Bought 10 AAPL",
+        tool_calls=[
+            ToolCall(name="check_limit", args={}),
+            ToolCall(name="execute_trade", args={}),
+        ],
+    )
+    expect(result).tool_calls_contain("check_limit")
+    expect(result).tool_calls_contain("execute_trade")
+''')
+
+    content = imports + "\n" + "\n".join(tests)
+
+    with open(filename, "w") as f:
+        f.write(content)
+
+    click.echo(f"  Created \033[1m{filename}\033[0m")
+    click.echo()
+
+    # Run it
+    if click.confirm("  Run it now?", default=True):
+        click.echo()
+        result = subprocess.run(
+            [sys.executable, "-m", "pytest", filename, "-v", "--tb=short"]
+        )
+
+        if result.returncode == 0:
+            click.echo()
+            click.echo("  \033[32mAll passing.\033[0m Edit the file to add your own tests.")
+            click.echo("  Docs: https://proofagent.dev/quickstart")
+            click.echo()
+
+        sys.exit(result.returncode)
+
+
+@cli.command()
 @click.argument("path", default="tests/")
 @click.option("--model", default=None, help="Override model for all tests")
 @click.option("--provider", default=None, help="Override provider")
