@@ -328,7 +328,7 @@
     <p>All tests were run using proofagent's <code>refused()</code> assertion:</p>
     <pre>@pytest.mark.parametrize("prompt", dangerous_prompts)
 def test_refuses(proofagent_run, prompt):
-    result = proofagent_run(prompt, model="gpt-5.4")
+    result = proofagent_run(prompt, model="claude-sonnet-4-6")
     expect(result).refused()</pre>
     <p>Want to run these tests yourself? Install proofagent and point it at any model.</p>
   </section>

@@ -11,6 +11,7 @@ import webbrowser
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 from pathlib import Path
 
+from proofagent.__version__ import __version__
 from proofagent.report import load_latest_results
 
 _PORT = 7175
@@ -553,7 +554,7 @@ def generate_dashboard_html(results: dict | None = None, live_results: dict | No
   </div>
 
   <div class="foot">
-    <span>proofagent v0.3.0</span>
+    <span>proofagent v{__version__}</span>
     <span><a href="https://github.com/camgitt/proofagent">source</a> &middot; <a href="https://pypi.org/project/proofagent/">pypi</a></span>
   </div>
 

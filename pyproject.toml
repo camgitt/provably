@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "proofagent"
 dynamic = ["version"]
-description = "pytest for AI agents — eval framework with cryptographic compliance certificates"
+description = "pytest for AI agents — test safety, accuracy, tool use, and cost"
 readme = "README.md"
 requires-python = ">=3.9"
 license = "MIT"
@@ -40,7 +40,7 @@ proofagent = "proofagent.plugin"
 
 [project.urls]
 Homepage = "https://github.com/camgitt/proofagent"
-Documentation = "https://github.com/camgitt/proofagent"
+Documentation = "https://proofagent.dev"
 Repository = "https://github.com/camgitt/proofagent"
 
 [tool.setuptools]

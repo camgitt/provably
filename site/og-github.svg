@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 640" fill="none">
+
+  <!-- Background — flat, no gradient -->
+  <rect width="1280" height="640" fill="#1a1b2e"/>
+
+  <!-- Logo: white checkmark in rounded square, centered-left -->
+  <rect x="340" y="190" width="72" height="72" rx="8" fill="#e0e0f0"/>
+  <path d="M358 230 L369 241 L392 218" stroke="#1a1b2e" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+  <!-- Product name -->
+  <text x="430" y="242" font-family="'IBM Plex Mono', ui-monospace, 'SF Mono', 'Cascadia Mono', 'Consolas', monospace" font-size="48" font-weight="700" fill="#e0e0f0">proofagent</text>
+
+  <!-- Tagline -->
+  <text x="340" y="330" font-family="'IBM Plex Mono', ui-monospace, 'SF Mono', 'Cascadia Mono', 'Consolas', monospace" font-size="32" font-weight="400" fill="#a0a0b8">pytest for AI agents</text>
+
+  <!-- Subtitle -->
+  <text x="340" y="390" font-family="'IBM Plex Mono', ui-monospace, 'SF Mono', 'Cascadia Mono', 'Consolas', monospace" font-size="20" font-weight="400" fill="#5a5a78">Test safety, accuracy, tool use, and cost. Zero telemetry.</text>
+
+  <!-- URL bottom-left -->
+  <text x="60" y="600" font-family="'IBM Plex Mono', ui-monospace, 'SF Mono', 'Cascadia Mono', 'Consolas', monospace" font-size="16" fill="#3a3a58">proofagent.dev</text>
+
+  <!-- License bottom-right -->
+  <text x="1220" y="600" font-family="'IBM Plex Mono', ui-monospace, 'SF Mono', 'Cascadia Mono', 'Consolas', monospace" font-size="16" fill="#3a3a58" text-anchor="end">Open Source</text>
+
+</svg>

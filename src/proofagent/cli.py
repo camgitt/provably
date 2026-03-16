@@ -129,6 +129,7 @@ def scan(model, pack_name):
     click.echo(f"  \033[1mproofagent scan\033[0m — {pack['name']} Pack")
     click.echo(f"  Model: {model}")
     click.echo(f"  {len(pack['prompts'])} prompts")
+    click.echo("  \033[2mYou are responsible for ensuring API usage complies with your provider's terms.\033[0m")
     click.echo()
 
     try:

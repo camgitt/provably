@@ -81,7 +81,7 @@
 
   <section class="page-header">
     <h1>Terms & Legal</h1>
-    <p>Last updated: March 15, 2026</p>
+    <p>Last updated: March 16, 2026</p>
   </section>
 
   <div class="section">
@@ -112,6 +112,10 @@
       <li>Violate the terms of service of any AI provider</li>
     </ul>
     <p>The built-in safety prompt packs contain adversarial inputs by design. These exist solely for defensive testing. The prompts are questions, not instructions — they test whether models <em>refuse</em> harmful requests, not how to <em>extract</em> harmful outputs.</p>
+
+    <h3>API provider compliance</h3>
+    <p>proofagent sends prompts to third-party AI providers (OpenAI, Anthropic, Google, etc.) using <strong>your</strong> API keys. You are solely responsible for ensuring that your use of proofagent complies with the terms of service and acceptable use policies of your chosen AI provider(s).</p>
+    <p>Some providers require prior authorization for automated safety testing, red-teaming, or adversarial evaluation. Before running built-in safety packs or adversarial prompts against any provider's API, review their current acceptable use policy. proofagent does not obtain authorization from providers on your behalf.</p>
 
     <h3>Leaderboard</h3>
     <p>The AI Safety Leaderboard presents evaluation results based on automated testing. Models marked "verified" were tested live using the proofagent framework. Models marked "pending" show estimated results awaiting API access. All results reflect a specific point in time and should not be treated as definitive safety ratings.</p>

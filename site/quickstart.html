@@ -286,11 +286,40 @@
     </div>
   </section>
 
-  <!-- STEP 2 -->
+  <!-- OPTION A: Quick scan -->
   <section class="step">
     <div class="step-header">
       <div class="step-num">2</div>
-      <h2>Write your first test</h2>
+      <h2>Option A: Quick scan (no code needed)</h2>
+    </div>
+    <p class="step-desc">Don't want to write tests yet? Run a single command. It fires 10 safety prompts at any model and gives you a score instantly.</p>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="dot dot-r"></div>
+        <div class="dot dot-y"></div>
+        <div class="dot dot-g"></div>
+        <span>Terminal</span>
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-muted">$</span> <span class="t-bright">proofagent scan claude-sonnet-4-6</span></div>
+        <div>&nbsp;</div>
+        <div><span class="t-dim">scanning claude-sonnet-4-6 with 10 safety prompts...</span></div>
+        <div>&nbsp;</div>
+        <div><span class="t-green">  Safety score: 9/10</span></div>
+        <div><span class="t-dim">  Total cost: $0.003</span></div>
+        <div><span class="t-dim">  Avg latency: 1.2s</span></div>
+      </div>
+    </div>
+    <div class="callout">
+      <strong>That's it — no test file, no config.</strong> Swap in any model name (<code style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; background: var(--bg-inset); padding: 2px 6px; border-radius: 3px;">gpt-4o</code>, <code style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; background: var(--bg-inset); padding: 2px 6px; border-radius: 3px;">claude-sonnet-4-6</code>, etc.) and get a safety baseline in seconds. When you're ready for custom assertions, keep reading.
+    </div>
+  </section>
+
+  <!-- OPTION B: STEP 2 -->
+  <section class="step">
+    <div class="step-header">
+      <div class="step-num">3</div>
+      <h2>Option B: Write custom tests</h2>
     </div>
     <p class="step-desc">Create a file called <code>test_my_agent.py</code> and paste this in. These tests run completely offline — no API key, no network calls. You're testing proofagent's assertion engine against hardcoded results.</p>
     <div class="terminal">
@@ -331,10 +360,10 @@
     </div>
   </section>
 
-  <!-- STEP 3 -->
+  <!-- STEP 4 -->
   <section class="step">
     <div class="step-header">
-      <div class="step-num">3</div>
+      <div class="step-num">4</div>
       <h2>Run it</h2>
     </div>
     <p class="step-desc">Just pytest. Nothing special.</p>
@@ -351,10 +380,10 @@
     </div>
   </section>
 
-  <!-- STEP 4 -->
+  <!-- STEP 5 -->
   <section class="step">
     <div class="step-header">
-      <div class="step-num">4</div>
+      <div class="step-num">5</div>
       <h2>See the results</h2>
     </div>
     <p class="step-desc">Here's what you'll get. Three tests, all passing, sub-second. No API calls were made.</p>
@@ -383,10 +412,10 @@
     </div>
   </section>
 
-  <!-- STEP 5 -->
+  <!-- STEP 6 -->
   <section class="step">
     <div class="step-header">
-      <div class="step-num">5</div>
+      <div class="step-num">6</div>
       <h2>Now test a live model</h2>
     </div>
     <p class="step-desc">This is where it gets real. Set your API key and let proofagent actually call the model. Add this test to the same file or a new one.</p>
@@ -438,10 +467,10 @@
     </div>
   </section>
 
-  <!-- STEP 6 -->
+  <!-- STEP 7 -->
   <section class="step">
     <div class="step-header">
-      <div class="step-num">6</div>
+      <div class="step-num">7</div>
       <h2>Run the live tests</h2>
     </div>
     <p class="step-desc">Same command. proofagent calls the model, checks assertions, and reports cost.</p>
@@ -473,10 +502,10 @@
     </div>
   </section>
 
-  <!-- STEP 7 -->
+  <!-- STEP 8 -->
   <section class="step">
     <div class="step-header">
-      <div class="step-num">7</div>
+      <div class="step-num">8</div>
       <h2>Add it to CI</h2>
     </div>
     <p class="step-desc">Now make it run on every push. Drop this into <code>.github/workflows/eval.yml</code> and bad deploys get blocked automatically.</p>
