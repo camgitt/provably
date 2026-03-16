@@ -29,7 +29,7 @@ def proofagent_run(proofagent_provider, proofagent_config):
 
     Usage:
         def test_greeting(proofagent_run):
-            result = proofagent_run("Say hello", model="gpt-4o-mini")
+            result = proofagent_run("Say hello", model="gpt-4.1-mini")
             expect(result).contains("hello")
     """
 

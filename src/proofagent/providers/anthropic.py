@@ -11,7 +11,15 @@ from proofagent.result import LLMResult, ToolCall
 _COSTS = {
     "claude-opus-4-6": {"input": 0.015, "output": 0.075},
     "claude-sonnet-4-6": {"input": 0.003, "output": 0.015},
+    "claude-sonnet-4-20250514": {"input": 0.003, "output": 0.015},
     "claude-haiku-4-5-20251001": {"input": 0.0008, "output": 0.004},
+}
+
+# Friendly aliases → actual API model IDs
+_MODEL_ALIASES = {
+    "claude-sonnet-4-6": "claude-sonnet-4-20250514",
+    "claude-opus-4-6": "claude-opus-4-20250514",
+    "claude-haiku-4-5": "claude-haiku-4-5-20251001",
 }
 
 
@@ -40,6 +48,8 @@ class AnthropicProvider(Provider):
         **kwargs,
     ) -> LLMResult:
         model = model or "claude-sonnet-4-6"
+        # Resolve friendly aliases to actual API model IDs
+        api_model = _MODEL_ALIASES.get(model, model)
         start = self._time()
 
         # Extract system message if present
@@ -52,7 +62,7 @@ class AnthropicProvider(Provider):
                 chat_messages.append(msg)
 
         params = {
-            "model": model,
+            "model": api_model,
             "messages": chat_messages,
             "max_tokens": kwargs.pop("max_tokens", 4096),
             **kwargs,

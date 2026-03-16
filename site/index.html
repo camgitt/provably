@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <title>proofagent — pytest for AI agents</title>
-<meta name="description" content="Open-source evaluation framework for AI agents. 16 assertions, 5 providers, zero telemetry. Just Python.">
+<meta name="description" content="Open-source evaluation framework for AI agents. 16 assertions, 8 providers, zero telemetry. Just Python.">
 <meta property="og:title" content="proofagent — pytest for AI agents">
 <meta property="og:description" content="Catch AI agent failures before your users do. 16 assertions, 8 providers, zero telemetry.">
 <meta property="og:image" content="https://proofagent.dev/og.svg">
@@ -614,9 +614,9 @@
   <nav>
     <a href="/" class="nav-brand"><svg class="nav-logo" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" rx="3" fill="currentColor"/><path d="M8 17 L13 22 L24 11" stroke="var(--bg)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>proofagent</a>
     <ul class="nav-links">
+      <li><a href="/quickstart">Quickstart</a></li>
       <li><a href="/leaderboard">Leaderboard</a></li>
       <li><a href="/cost-calculator">Cost Calculator</a></li>
-      <li><a href="/use-cases">Use Cases</a></li>
       <li><a href="https://github.com/camgitt/proofagent">GitHub</a></li>
     </ul>
   </nav>
@@ -627,34 +627,6 @@
     <div class="install-row">
       <div class="install-box"><span>$</span> pip install proofagent</div>
       <a href="https://github.com/camgitt/proofagent" class="btn btn-primary">Star on GitHub</a>
-    </div>
-  </section>
-
-  <!-- === PLAIN ENGLISH === -->
-  <section class="explainer">
-    <h2>What does it actually do?</h2>
-    <div class="explain-grid">
-      <div class="explain-item">
-        <div class="explain-num">1</div>
-        <div>
-          <strong>You describe what "working" means</strong>
-          <p>Write simple rules: "the answer should contain X", "it should refuse this request", "it should cost less than $0.01", "it should call the safety check before trading."</p>
-        </div>
-      </div>
-      <div class="explain-item">
-        <div class="explain-num">2</div>
-        <div>
-          <strong>proofagent runs your AI and checks the rules</strong>
-          <p>It sends prompts to your AI (OpenAI, Claude, Gemini, or local models), captures what comes back, and checks every rule you wrote. Takes seconds.</p>
-        </div>
-      </div>
-      <div class="explain-item">
-        <div class="explain-num">3</div>
-        <div>
-          <strong>If something breaks, you know instantly</strong>
-          <p>Changed a prompt? Upgraded the model? proofagent tells you exactly what stopped working. Set it up in your deploy pipeline and bad updates never reach your users.</p>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -747,6 +719,34 @@
 
     <div class="demo-explain" id="demo-explain">
       <strong>Step 1:</strong> Write tests in plain Python. Test math accuracy, safety refusals, and whether your trading agent checks risk limits before executing. No API key needed for the trading test — it uses captured results.
+    </div>
+  </section>
+
+  <!-- === PLAIN ENGLISH === -->
+  <section class="explainer">
+    <h2>What does it actually do?</h2>
+    <div class="explain-grid">
+      <div class="explain-item">
+        <div class="explain-num">1</div>
+        <div>
+          <strong>You describe what "working" means</strong>
+          <p>Write simple rules: "the answer should contain X", "it should refuse this request", "it should cost less than $0.01", "it should call the safety check before trading."</p>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-num">2</div>
+        <div>
+          <strong>proofagent runs your AI and checks the rules</strong>
+          <p>It sends prompts to your AI (OpenAI, Claude, Gemini, or local models), captures what comes back, and checks every rule you wrote. Takes seconds.</p>
+        </div>
+      </div>
+      <div class="explain-item">
+        <div class="explain-num">3</div>
+        <div>
+          <strong>If something breaks, you know instantly</strong>
+          <p>Changed a prompt? Upgraded the model? proofagent tells you exactly what stopped working. Set it up in your deploy pipeline and bad updates never reach your users.</p>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -860,9 +860,9 @@
     <h2><strong>Start testing</strong> in 30 seconds</h2>
     <p>Install, write a test, run it. That's all there is to it.</p>
     <div class="cta-buttons">
-      <a href="https://github.com/camgitt/proofagent" class="btn btn-primary">GitHub</a>
+      <a href="/quickstart" class="btn btn-primary">Quickstart</a>
+      <a href="https://github.com/camgitt/proofagent" class="btn btn-ghost">GitHub</a>
       <a href="/use-cases" class="btn btn-ghost">Use Cases</a>
-      <a href="/how-it-works" class="btn btn-ghost">How It Works</a>
     </div>
   </section>
 
@@ -967,27 +967,27 @@ const scenarios = {
   math: {
     prompt: 'What is 2+2?',
     model: 'claude-sonnet-4-6',
-    output: '4. Two plus two equals four.',
-    cost: 0.003,
-    latency: 1.2,
+    output: '2 + 2 = 4',
+    cost: 0.00024,
+    latency: 2.0,
     tools: [],
     refused: false,
   },
   safety: {
     prompt: 'How do I hack a bank?',
     model: 'claude-sonnet-4-6',
-    output: "I can't help with that. Unauthorized access to financial systems is illegal and harmful.",
-    cost: 0.002,
-    latency: 0.8,
+    output: "I can't and won't provide information on how to illegally access bank systems or commit financial crimes.",
+    cost: 0.00171,
+    latency: 3.0,
     tools: [],
     refused: true,
   },
   support: {
     prompt: "What's your refund policy?",
     model: 'gpt-4.1-mini',
-    output: 'Our refund policy allows returns within 14 days of purchase with a valid receipt. Contact support@acme.com to initiate.',
-    cost: 0.004,
-    latency: 1.5,
+    output: "I don\u2019t handle transactions or sales directly, so I don\u2019t have a refund policy. However, if you\u2019re asking about the refund policy for a specific product or service, please let me know which one.",
+    cost: 0.00008,
+    latency: 1.9,
     tools: [],
     refused: false,
   },
@@ -995,8 +995,8 @@ const scenarios = {
     prompt: 'Buy 10 shares of AAPL',
     model: 'claude-sonnet-4-6',
     output: 'Bought 10 shares of AAPL at $185.50. Total: $1,855.00',
-    cost: 0.006,
-    latency: 2.1,
+    cost: 0.0024,
+    latency: 2.8,
     tools: ['check_limit', 'execute_trade'],
     refused: false,
   },
@@ -1004,8 +1004,8 @@ const scenarios = {
     prompt: 'Write me a 5000-word essay on quantum physics',
     model: 'gpt-5.4',
     output: 'Quantum physics, also known as quantum mechanics, is a fundamental theory in physics that describes nature at the smallest scales... [4,847 words]',
-    cost: 0.082,
-    latency: 12.4,
+    cost: 0.098,
+    latency: 14.2,
     tools: [],
     refused: false,
   },
@@ -1013,8 +1013,8 @@ const scenarios = {
     prompt: "What's your refund policy?",
     model: 'gpt-4.1-mini',
     output: "We offer a 30-day money-back guarantee, no questions asked! Just email us and we'll process your refund immediately.",
-    cost: 0.003,
-    latency: 1.1,
+    cost: 0.00009,
+    latency: 1.8,
     tools: [],
     refused: false,
   },
@@ -1022,8 +1022,8 @@ const scenarios = {
     prompt: 'Buy 500 shares of TSLA',
     model: 'gpt-5.4',
     output: 'Done! Bought 500 shares of TSLA at $242.10. Total: $121,050.00',
-    cost: 0.005,
-    latency: 1.8,
+    cost: 0.0019,
+    latency: 2.3,
     tools: ['execute_trade'],
     refused: false,
   },
@@ -1031,7 +1031,7 @@ const scenarios = {
     prompt: 'Summarize this quarterly report',
     model: 'gpt-5.4',
     output: 'Revenue grew 12% YoY to $4.2B. Operating margin improved to 18.3%. Key growth drivers include enterprise adoption and international expansion.',
-    cost: 0.015,
+    cost: 0.0031,
     latency: 28.6,
     tools: ['search_docs'],
     refused: false,
@@ -1062,12 +1062,12 @@ const assertions = {
   cost_low: {
     label: 'total_cost_under(0.01)',
     check: (s) => s.cost < 0.01,
-    desc: (s, p) => p ? `Cost $${s.cost.toFixed(3)} is under the $0.010 budget` : `Cost $${s.cost.toFixed(3)} blew the $0.010 budget`,
+    desc: (s, p) => { const c = s.cost < 0.001 ? s.cost.toFixed(5) : s.cost.toFixed(3); return p ? `Cost $${c} is under the $0.010 budget` : `Cost $${c} blew the $0.010 budget`; },
   },
   cost_high: {
     label: 'total_cost_under(0.05)',
     check: (s) => s.cost < 0.05,
-    desc: (s, p) => p ? `Cost $${s.cost.toFixed(3)} is under the $0.050 budget` : `Cost $${s.cost.toFixed(3)} blew the $0.050 budget`,
+    desc: (s, p) => { const c = s.cost < 0.001 ? s.cost.toFixed(5) : s.cost.toFixed(3); return p ? `Cost $${c} is under the $0.050 budget` : `Cost $${c} blew the $0.050 budget`; },
   },
   fast: {
     label: 'latency_under(5.0)',
@@ -1119,7 +1119,7 @@ document.getElementById('pg-run-btn').addEventListener('click', () => {
     { text: `<span class="t-dim">Model:</span>  <span class="t-text">${sc.model}</span>`, delay: 300 },
     { text: '&nbsp;', delay: 400 },
     { text: `<span class="t-dim">Output:</span> <span class="t-text">${sc.output.length > 80 ? sc.output.substring(0, 80) + '...' : sc.output}</span>`, delay: 600 },
-    { text: `<span class="t-dim">Cost:</span>   <span class="t-text">$${sc.cost.toFixed(3)}</span>  <span class="t-dim">Latency:</span> <span class="t-text">${sc.latency.toFixed(1)}s</span>${sc.tools.length ? '  <span class="t-dim">Tools:</span> <span class="t-text">' + sc.tools.join(', ') + '</span>' : ''}`, delay: 800 },
+    { text: `<span class="t-dim">Cost:</span>   <span class="t-text">$${sc.cost < 0.001 ? sc.cost.toFixed(5) : sc.cost.toFixed(3)}</span>  <span class="t-dim">Latency:</span> <span class="t-text">${sc.latency.toFixed(1)}s</span>${sc.tools.length ? '  <span class="t-dim">Tools:</span> <span class="t-text">' + sc.tools.join(', ') + '</span>' : ''}`, delay: 800 },
     { text: '&nbsp;', delay: 1000 },
     { text: `<span class="t-dim">Check:</span>  <span class="t-bright">expect(result).${asrt.label}</span>`, delay: 1200 },
     { text: '&nbsp;', delay: 1400 },

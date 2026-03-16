@@ -8,11 +8,12 @@ from proofagent.providers.base import Provider
 from proofagent.result import LLMResult, ToolCall
 
 
-# Approximate cost per 1K tokens (USD) — updated for common models
+# Approximate cost per 1K tokens (USD) — updated March 2026
 _COSTS = {
+    "gpt-5.4": {"input": 0.0025, "output": 0.015},
+    "gpt-4.1-mini": {"input": 0.0004, "output": 0.0016},
     "gpt-4o": {"input": 0.0025, "output": 0.01},
     "gpt-4o-mini": {"input": 0.00015, "output": 0.0006},
-    "gpt-4-turbo": {"input": 0.01, "output": 0.03},
     "o1": {"input": 0.015, "output": 0.06},
     "o1-mini": {"input": 0.003, "output": 0.012},
 }
@@ -43,7 +44,7 @@ class OpenAIProvider(Provider):
         tools: list[dict] | None = None,
         **kwargs,
     ) -> LLMResult:
-        model = model or "gpt-4o-mini"
+        model = model or "gpt-4.1-mini"
         start = self._time()
 
         params = {"model": model, "messages": messages, **kwargs}

@@ -8,13 +8,12 @@ from proofagent.providers.base import Provider
 from proofagent.result import LLMResult, ToolCall
 
 
-# Approximate cost per 1K tokens (USD)
+# Approximate cost per 1K tokens (USD) — updated March 2026
 _COSTS = {
+    "gemini-3.1-pro-preview": {"input": 0.002, "output": 0.012},
+    "gemini-3-flash-preview": {"input": 0.0005, "output": 0.003},
+    "gemini-2.5-flash": {"input": 0.00015, "output": 0.001},
     "gemini-2.0-flash": {"input": 0.0001, "output": 0.0004},
-    "gemini-2.0-flash-lite": {"input": 0.0000375, "output": 0.00015},
-    "gemini-1.5-pro": {"input": 0.00125, "output": 0.005},
-    "gemini-1.5-flash": {"input": 0.0000375, "output": 0.00015},
-    "gemini-1.5-flash-8b": {"input": 0.0000375, "output": 0.00015},
 }
 
 
@@ -44,7 +43,7 @@ class GeminiProvider(Provider):
     ) -> LLMResult:
         from google.genai import types
 
-        model = model or "gemini-2.0-flash"
+        model = model or "gemini-2.5-flash"
         start = self._time()
 
         # Convert OpenAI-style messages to Gemini format
