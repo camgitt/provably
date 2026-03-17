@@ -50,4 +50,12 @@ def _detect_provider() -> str:
         return "anthropic"
     if os.getenv("GOOGLE_API_KEY"):
         return "gemini"
-    return "ollama"
+    # Check if ollama is available before defaulting to it
+    try:
+        import requests
+        return "ollama"
+    except ImportError:
+        raise RuntimeError(
+            "No API key found. Set one of: OPENAI_API_KEY, ANTHROPIC_API_KEY, GOOGLE_API_KEY\n"
+            "  Or install Ollama for local models: pip install proofagent[ollama]"
+        )

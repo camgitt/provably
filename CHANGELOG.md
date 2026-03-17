@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.7.1 (2026-03-16)
+
+- Fix: add pytest as core dependency (was only in dev extras)
+- Fix: clear error message when no API key is set instead of cryptic import error
+
 ## 0.7.0 (2026-03-16)
 
 - Add multi-turn conversation testing (`Conversation` class, `turn_count`, `all_turns_cost_under`, `no_turn_refused`)
