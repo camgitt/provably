@@ -1,6 +1,6 @@
 """proofagent — pytest for AI agents.
 
-Evaluate, test, and certify AI agents with cryptographic compliance proofs.
+Evaluate and test AI agents. Safety, accuracy, tool use, cost, and skill evaluation.
 
 Usage:
     from proofagent import expect, LLMResult

@@ -12,7 +12,7 @@ def pytest_configure(config):
 
 
 # Register fixtures by importing them — pytest discovers them from here
-from proofagent.fixtures import proofagent_config, proofagent_provider, proofagent_run  # noqa: E402, F401
+from proofagent.fixtures import proofagent_compare, proofagent_config, proofagent_dataset, proofagent_provider, proofagent_run  # noqa: E402, F401
 
 
 def pytest_terminal_summary(terminalreporter, exitstatus, config):

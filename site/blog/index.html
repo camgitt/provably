@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<title>Blog — AI Agent Testing Guides & Tutorials | proofagent</title>
+<meta name="description" content="Practical guides on AI agent evaluation, safety testing, skill benchmarks, and cost optimization. From the creators of proofagent.">
+<link rel="canonical" href="https://proofagent.dev/blog" />
+<meta property="og:title" content="Blog | proofagent">
+<meta property="og:description" content="Practical guides on AI agent evaluation, safety testing, skill benchmarks, and cost optimization.">
+<meta property="og:image" content="https://proofagent.dev/og.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://proofagent.dev/blog">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Blog | proofagent">
+<meta name="twitter:description" content="Practical guides on AI agent evaluation, safety testing, and skill benchmarks.">
+<meta name="twitter:image" content="https://proofagent.dev/og.png">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: oklch(0.145 0.012 255);
+    --bg-raised: oklch(0.175 0.014 255);
+    --bg-inset: oklch(0.125 0.01 255);
+    --border: oklch(0.26 0.012 255);
+    --border-subtle: oklch(0.22 0.01 255);
+    --text: oklch(0.92 0.008 255);
+    --text-2: oklch(0.68 0.01 255);
+    --text-3: oklch(0.48 0.008 255);
+    --text-4: oklch(0.36 0.006 255);
+    --pass: oklch(0.70 0.16 158);
+    --fail: oklch(0.68 0.19 22);
+    --warn: oklch(0.76 0.13 80);
+    --accent: oklch(0.70 0.14 260);
+  }
+
+  html { font-size: 16px; }
+  body {
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.6;
+  }
+
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+
+  nav { padding: 24px 0; display: flex; justify-content: space-between; align-items: center; }
+  .nav-brand { font-family: 'IBM Plex Mono', monospace; font-size: 14px; font-weight: 500; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+  .nav-logo { width: 22px; height: 22px; }
+  .nav-links { display: flex; gap: 24px; list-style: none; }
+  .nav-links a { font-size: 13px; color: var(--text-3); text-decoration: none; transition: color 0.15s; }
+  .nav-links a:hover { color: var(--text); }
+
+  .page-header { padding: 64px 0 16px; }
+  .page-header h1 { font-size: 32px; font-weight: 300; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 12px; }
+  .page-header h1 strong { font-weight: 700; }
+  .page-header p { font-size: 15px; color: var(--text-2); max-width: 620px; line-height: 1.65; }
+
+  .posts { margin: 48px 0 80px; display: flex; flex-direction: column; gap: 0; }
+
+  .post-card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    padding: 28px 0;
+    border-bottom: 1px solid var(--border-subtle);
+    transition: background 0.15s;
+  }
+  .post-card:first-child { border-top: 1px solid var(--border-subtle); }
+  .post-card:hover { background: var(--bg-raised); padding-left: 16px; padding-right: 16px; margin-left: -16px; margin-right: -16px; border-radius: 8px; }
+
+  .post-date {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--text-4);
+    margin-bottom: 6px;
+  }
+
+  .post-title {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.3;
+    margin-bottom: 6px;
+  }
+
+  .post-desc {
+    font-size: 14px;
+    color: var(--text-2);
+    line-height: 1.5;
+  }
+
+  .cta {
+    margin: 0 0 80px;
+    padding: 32px;
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    text-align: center;
+  }
+  .cta p { font-size: 15px; color: var(--text-2); margin-bottom: 16px; }
+  .cta code {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    background: var(--bg-inset);
+    border: 1px solid var(--border);
+    padding: 8px 20px;
+    border-radius: 6px;
+    color: var(--text);
+  }
+
+  footer { padding: 32px 0; border-top: 1px solid var(--border-subtle); text-align: center; }
+  footer p { font-size: 12px; color: var(--text-4); }
+  footer a { color: var(--text-3); text-decoration: none; }
+  footer a:hover { color: var(--text); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <a class="nav-brand" href="/">
+      <img class="nav-logo" src="/logo.svg" alt="proofagent">
+      proofagent
+    </a>
+    <ul class="nav-links">
+      <li><a href="/quickstart">Quickstart</a></li>
+      <li><a href="/leaderboard">Safety</a></li>
+      <li><a href="/skills">Skills</a></li>
+      <li><a href="/blog/" style="color:var(--text)">Blog</a></li>
+      <li><a href="https://github.com/camgitt/proofagent">GitHub</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-header">
+    <h1>From the <strong>proofagent</strong> blog</h1>
+    <p>Practical guides on AI agent evaluation, safety testing, skill benchmarks, and keeping costs under control.</p>
+  </div>
+
+  <div class="posts">
+    <a class="post-card" href="/blog/promptfoo-alternative">
+      <div class="post-date">2026-03-18</div>
+      <div class="post-title">Promptfoo Was Acquired by OpenAI. Here Are Your Options.</div>
+      <div class="post-desc">Promptfoo is now owned by the company whose models you're evaluating. Here's what that means and the best independent alternatives.</div>
+    </a>
+
+    <a class="post-card" href="/blog/test-ai-agent-safety">
+      <div class="post-date">2026-03-12</div>
+      <div class="post-title">How to Test Your AI Agent for Safety</div>
+      <div class="post-desc">A step-by-step guide to running refusal, bias, and hallucination tests against any LLM-powered agent.</div>
+    </a>
+
+    <a class="post-card" href="/blog/ai-evaluation-cost">
+      <div class="post-date">2026-03-14</div>
+      <div class="post-title">How Much Does AI Agent Evaluation Cost?</div>
+      <div class="post-desc">Real cost breakdowns for eval suites across models, plus strategies to cut your testing bill by 80%.</div>
+    </a>
+
+    <a class="post-card" href="/blog/prove-ai-agent-skills">
+      <div class="post-date">2026-03-16</div>
+      <div class="post-title">Proving Your AI Agent's Skills: A Developer's Guide</div>
+      <div class="post-desc">Safety leaderboards prove refusal, but not competence &mdash; here's how to benchmark coding, reasoning, and writing.</div>
+    </a>
+  </div>
+
+  <div class="cta">
+    <p>Start testing your AI agent in under a minute.</p>
+    <code>pip install proofagent</code>
+  </div>
+
+  <footer>
+    <p>proofagent &mdash; <a href="https://github.com/camgitt/proofagent">open source</a></p>
+  </footer>
+</div>
+</body>
+</html>

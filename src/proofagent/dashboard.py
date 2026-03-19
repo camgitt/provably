@@ -14,6 +14,16 @@ from pathlib import Path
 from proofagent.__version__ import __version__
 from proofagent.report import load_latest_results
 
+
+def _escape(text: str) -> str:
+    """Escape HTML special characters."""
+    return (
+        text.replace("&", "&amp;")
+        .replace("<", "&lt;")
+        .replace(">", "&gt;")
+        .replace('"', "&quot;")
+    )
+
 _PORT = 7175
 
 
@@ -38,7 +48,7 @@ def _collect_live_results(test_path: str = "tests/", extra_args: list[str] | Non
         cmd.extend(extra_args)
 
     env = os.environ.copy()
-    env["PROVABLY_SAVE_RESULTS"] = "1"
+    env["PROOFAGENT_SAVE_RESULTS"] = "1"
 
     result = subprocess.run(cmd, capture_output=True, text=True, env=env)
     stdout = result.stdout
@@ -565,6 +575,8 @@ const tests = {tests_json};
 const summary = {summary_json};
 const rawStdout = {raw_stdout_json};
 
+function esc(s) {{ const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }}
+
 (function() {{
   if (!tests.length && !summary.total) {{
     document.getElementById('tbody').innerHTML =
@@ -634,12 +646,12 @@ const rawStdout = {raw_stdout_json};
     tr.style.setProperty('--i', i);
     const desc = t.description || '';
     tr.innerHTML =
-      '<td><div class="name-cell"><span class="indicator ' + (ok ? 'indicator-pass' : 'indicator-fail') + '"></span><span class="t-name">' + name + '</span>' +
-      (desc ? '<span class="t-desc">' + desc + '</span>' : '') +
+      '<td><div class="name-cell"><span class="indicator ' + (ok ? 'indicator-pass' : 'indicator-fail') + '"></span><span class="t-name">' + esc(name) + '</span>' +
+      (desc ? '<span class="t-desc">' + esc(desc) + '</span>' : '') +
       '</div>' +
-      (t.error ? '<div class="t-err">' + (t.error || '').substring(0, 140) + '</div>' : '') +
+      (t.error ? '<div class="t-err">' + esc((t.error || '').substring(0, 140)) + '</div>' : '') +
       '</td>' +
-      '<td style="font-family: IBM Plex Mono, monospace; font-size: 11.5px; color: var(--text-4);">' + file + '</td>' +
+      '<td style="font-family: IBM Plex Mono, monospace; font-size: 11.5px; color: var(--text-4);">' + esc(file) + '</td>' +
       '<td>' + (t.cost ? '$' + t.cost.toFixed(4) : '\u2014') + '</td>' +
       '<td>' + (t.latency ? t.latency.toFixed(2) + 's' : '<1ms') + '</td>';
     tbody.appendChild(tr);

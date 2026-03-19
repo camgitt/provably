@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<title>Proving Your AI Agent's Skills: A Developer's Guide — proofagent</title>
+<meta name="description" content="Learn how to benchmark your AI agent's coding, reasoning, math, and writing abilities with standardized skill proofs. LLM-as-judge scoring explained.">
+<link rel="canonical" href="https://proofagent.dev/blog/prove-ai-agent-skills" />
+<meta property="og:title" content="Proving Your AI Agent's Skills: A Developer's Guide">
+<meta property="og:description" content="Safety leaderboards prove refusal, not competence. Here's how to benchmark what your AI agent can actually do.">
+<meta property="og:image" content="https://proofagent.dev/og.png">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://proofagent.dev/blog/prove-ai-agent-skills">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Proving Your AI Agent's Skills: A Developer's Guide">
+<meta name="twitter:description" content="Benchmark your AI agent's coding, reasoning, math, and writing abilities.">
+<meta name="twitter:image" content="https://proofagent.dev/og.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Proving Your AI Agent's Skills: A Developer's Guide",
+  "description": "Learn how to benchmark your AI agent's coding, reasoning, math, and writing abilities with standardized skill proofs.",
+  "datePublished": "2026-03-16",
+  "author": { "@type": "Organization", "name": "proofagent" },
+  "publisher": { "@type": "Organization", "name": "proofagent", "url": "https://proofagent.dev" },
+  "url": "https://proofagent.dev/blog/prove-ai-agent-skills"
+}
+</script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: oklch(0.145 0.012 255);
+    --bg-raised: oklch(0.175 0.014 255);
+    --bg-inset: oklch(0.125 0.01 255);
+    --border: oklch(0.26 0.012 255);
+    --border-subtle: oklch(0.22 0.01 255);
+    --text: oklch(0.92 0.008 255);
+    --text-2: oklch(0.68 0.01 255);
+    --text-3: oklch(0.48 0.008 255);
+    --text-4: oklch(0.36 0.006 255);
+    --pass: oklch(0.70 0.16 158);
+    --fail: oklch(0.68 0.19 22);
+    --warn: oklch(0.76 0.13 80);
+    --accent: oklch(0.70 0.14 260);
+  }
+
+  html { font-size: 16px; }
+  body {
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.6;
+  }
+
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+
+  nav { padding: 24px 0; display: flex; justify-content: space-between; align-items: center; }
+  .nav-brand { font-family: 'IBM Plex Mono', monospace; font-size: 14px; font-weight: 500; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+  .nav-logo { width: 22px; height: 22px; }
+  .nav-links { display: flex; gap: 24px; list-style: none; }
+  .nav-links a { font-size: 13px; color: var(--text-3); text-decoration: none; transition: color 0.15s; }
+  .nav-links a:hover { color: var(--text); }
+
+  .back-link { display: inline-block; margin-top: 48px; font-size: 13px; color: var(--text-3); text-decoration: none; }
+  .back-link:hover { color: var(--text); }
+
+  article { margin: 16px 0 80px; }
+  article h1 { font-size: 32px; font-weight: 300; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 12px; }
+  article h1 strong { font-weight: 700; }
+  .article-meta { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--text-4); margin-bottom: 40px; }
+
+  article h2 { font-size: 20px; font-weight: 600; margin: 40px 0 12px; }
+  article h3 { font-size: 16px; font-weight: 600; margin: 28px 0 8px; }
+  article p { font-size: 15px; color: var(--text-2); line-height: 1.75; margin-bottom: 16px; }
+  article ul, article ol { margin: 0 0 16px 20px; }
+  article li { font-size: 15px; color: var(--text-2); line-height: 1.75; margin-bottom: 4px; }
+  article a { color: var(--accent); text-decoration: underline; }
+  article a:hover { color: var(--text); }
+
+  pre {
+    background: var(--bg-inset);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 16px 20px;
+    margin: 16px 0 24px;
+    overflow-x: auto;
+  }
+  pre code {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+  code {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    background: var(--bg-inset);
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+
+  .skill-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 16px 0 24px;
+  }
+  .skill-card {
+    padding: 16px;
+    background: var(--bg-raised);
+    border: 1px solid var(--border-subtle);
+    border-radius: 6px;
+  }
+  .skill-card strong {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+  .skill-card span {
+    font-size: 13px;
+    color: var(--text-3);
+    line-height: 1.5;
+  }
+
+  .cta {
+    margin: 48px 0 80px;
+    padding: 32px;
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    text-align: center;
+  }
+  .cta p { font-size: 15px; color: var(--text-2); margin-bottom: 16px; }
+  .cta code {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    background: var(--bg-inset);
+    border: 1px solid var(--border);
+    padding: 8px 20px;
+    border-radius: 6px;
+    color: var(--text);
+  }
+
+  footer { padding: 32px 0; border-top: 1px solid var(--border-subtle); text-align: center; }
+  footer p { font-size: 12px; color: var(--text-4); }
+  footer a { color: var(--text-3); text-decoration: none; }
+  footer a:hover { color: var(--text); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <a class="nav-brand" href="/">
+      <img class="nav-logo" src="/logo.svg" alt="proofagent">
+      proofagent
+    </a>
+    <ul class="nav-links">
+      <li><a href="/quickstart">Quickstart</a></li>
+      <li><a href="/leaderboard">Safety</a></li>
+      <li><a href="/skills">Skills</a></li>
+      <li><a href="/blog/" style="color:var(--text)">Blog</a></li>
+      <li><a href="https://github.com/camgitt/proofagent">GitHub</a></li>
+    </ul>
+  </nav>
+
+  <a class="back-link" href="/blog">&larr; Back to blog</a>
+
+  <article>
+    <h1>Proving Your <strong>AI Agent's Skills</strong>: A Developer's Guide</h1>
+    <div class="article-meta">2026-03-16</div>
+
+    <p>Safety leaderboards tell you what your AI agent refuses to do. They don't tell you what it's actually good at. An agent that scores 100% on refusal tests but can't write working code or summarize a document accurately isn't useful to anyone. You need both halves of the picture.</p>
+
+    <p>This guide explains how skill proofs work, how LLM-as-judge scoring produces reliable scores, and how to run skill evaluations with proofagent.</p>
+
+    <h2>The problem: safety is not competence</h2>
+
+    <p>Most AI evaluation frameworks focus on safety &mdash; does the model refuse harmful requests? That's necessary but insufficient. Your users chose your product because of what it can do, not what it won't do.</p>
+
+    <p>When a team is choosing between AI models, they need to answer questions like:</p>
+    <ul>
+      <li>Can this model actually write correct Python code?</li>
+      <li>Does it follow multi-step reasoning without losing the thread?</li>
+      <li>Can it summarize a 2,000-word document without hallucinating details?</li>
+      <li>Does it produce coherent, well-structured prose?</li>
+    </ul>
+
+    <p>These are skill questions. They require a different kind of evaluation than binary pass/fail safety tests.</p>
+
+    <h2>What skill proofs are</h2>
+
+    <p>A skill proof is a standardized evaluation that measures your AI agent's capability in a specific domain. proofagent ships with five built-in skill categories:</p>
+
+    <div class="skill-grid">
+      <div class="skill-card">
+        <strong>Coding</strong>
+        <span>Generate correct, runnable code from natural language specifications</span>
+      </div>
+      <div class="skill-card">
+        <strong>Reasoning</strong>
+        <span>Solve multi-step logic problems and maintain coherent chains of thought</span>
+      </div>
+      <div class="skill-card">
+        <strong>Math</strong>
+        <span>Solve arithmetic, algebra, and word problems with correct final answers</span>
+      </div>
+      <div class="skill-card">
+        <strong>Writing</strong>
+        <span>Produce clear, well-structured prose that follows specific instructions</span>
+      </div>
+      <div class="skill-card">
+        <strong>Summarization</strong>
+        <span>Condense long inputs without losing key information or adding fabrications</span>
+      </div>
+    </div>
+
+    <p>Each category contains multiple test prompts with defined evaluation criteria. Unlike safety tests (which are binary pass/fail), skill tests produce a score from 0 to 10, giving you a granular view of model capability.</p>
+
+    <h2>How LLM-as-judge scoring works</h2>
+
+    <p>Skill evaluation uses a technique called LLM-as-judge. Here's the flow:</p>
+
+    <ol>
+      <li><strong>Prompt</strong> &mdash; proofagent sends a skill challenge to your target model (e.g., "Write a Python function that merges two sorted lists")</li>
+      <li><strong>Response</strong> &mdash; Your model generates its answer</li>
+      <li><strong>Judging</strong> &mdash; A separate judge model (typically GPT-4o-mini) evaluates the response against a detailed rubric</li>
+      <li><strong>Score</strong> &mdash; The judge assigns a 0-10 score with written rationale</li>
+    </ol>
+
+    <p>The judge model receives the original prompt, the rubric, and the response. It doesn't know which model produced the response, reducing bias. The written rationale makes every score auditable &mdash; you can read exactly why a response got a 7 instead of a 9.</p>
+
+    <p>Research shows that LLM-as-judge correlates well with human evaluations when the rubric is specific. proofagent's rubrics have been calibrated against human raters to minimize scoring drift.</p>
+
+    <h2>Running skill proofs</h2>
+
+    <p>Run skill evaluations with a single command:</p>
+
+<pre><code># Run all skill evaluations
+proofagent skills --provider openai --model gpt-4o
+
+# Run a specific skill category
+proofagent skills --provider openai --model gpt-4o --category coding
+
+# Compare two models head-to-head
+proofagent skills --provider openai --model gpt-4o --compare gpt-4o-mini</code></pre>
+
+    <p>The output shows per-category scores with the judge's rationale for each:</p>
+
+<pre><code>proofagent skill results
+========================
+Model: gpt-4o (openai)
+
+  Coding         8.4 / 10   (5 tests)
+  Reasoning      7.9 / 10   (4 tests)
+  Math           9.1 / 10   (4 tests)
+  Writing        8.0 / 10   (3 tests)
+  Summarization  8.6 / 10   (3 tests)
+
+  Overall        8.4 / 10</code></pre>
+
+    <h2>Submitting to the leaderboard</h2>
+
+    <p>Once you've run skill proofs, submit the results to the <a href="/skills">proofagent skills leaderboard</a> to create a public record of your model's capabilities:</p>
+
+<pre><code>proofagent skills --provider openai --model gpt-4o --submit</code></pre>
+
+    <p>The leaderboard shows scores across all five categories, making it easy to compare models at a glance. It's the skills counterpart to the <a href="/leaderboard">safety leaderboard</a> &mdash; together they give a complete picture of what a model will and won't do.</p>
+
+    <h2>Custom skill packs for your domain</h2>
+
+    <p>The built-in skill categories cover general capabilities, but your agent probably has domain-specific requirements. A legal AI needs to parse case citations. A medical agent needs to interpret lab results. A DevOps agent needs to write correct Kubernetes manifests.</p>
+
+    <p>proofagent supports custom skill packs &mdash; YAML files that define your own evaluation prompts and rubrics:</p>
+
+<pre><code># my-skills.yaml
+name: kubernetes-ops
+tests:
+  - prompt: |
+      Write a Kubernetes deployment manifest for a
+      Node.js app with 3 replicas, resource limits,
+      and a readiness probe on /health.
+    rubric: |
+      Score 0-10 based on:
+      - Valid YAML syntax (2 pts)
+      - Correct apiVersion and kind (2 pts)
+      - 3 replicas specified (2 pts)
+      - Resource limits present (2 pts)
+      - Readiness probe on /health (2 pts)
+    category: kubernetes</code></pre>
+
+<pre><code># Run with custom skill pack
+proofagent skills --provider openai --model gpt-4o --pack my-skills.yaml</code></pre>
+
+    <p>Custom skill packs let you test exactly the capabilities that matter for your use case. They follow the same LLM-as-judge scoring pipeline, so results are consistent and auditable.</p>
+
+    <h2>Putting it all together</h2>
+
+    <p>A complete AI evaluation strategy tests both safety and skills. Start with the built-in suites to establish a baseline, then add custom skill packs for your domain. Run safety tests in CI on every change. Run skill evaluations weekly or when switching models.</p>
+
+    <p>The goal isn't a perfect score. It's knowing exactly where your agent excels and where it falls short, so you can make informed decisions about what to ship and what to hold back.</p>
+
+    <p>Explore the <a href="/skills">skills leaderboard</a> to see how current models compare, then run the evaluation yourself.</p>
+  </article>
+
+  <div class="cta">
+    <p>Benchmark your AI agent's skills in under a minute.</p>
+    <code>pip install proofagent</code>
+  </div>
+
+  <footer>
+    <p>proofagent &mdash; <a href="https://github.com/camgitt/proofagent">open source</a></p>
+  </footer>
+</div>
+</body>
+</html>

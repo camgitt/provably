@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<title>AI Agent Skill Leaderboard — Coding, Reasoning, Math, Writing Scores | proofagent</title>
+<meta name="description" content="Test your AI agent's skills in coding, reasoning, math, writing, and summarization. LLM-judge scored evaluations with public leaderboard. Open-source CLI tool.">
+<link rel="canonical" href="https://proofagent.dev/skills" />
+<meta property="og:title" content="AI Agent Skill Leaderboard | proofagent">
+<meta property="og:description" content="Test your AI agent's skills and submit scores to the public leaderboard. Coding, reasoning, math, writing, summarization. Open-source.">
+<meta property="og:image" content="https://proofagent.dev/og.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://proofagent.dev/skills">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AI Agent Skill Leaderboard | proofagent">
+<meta name="twitter:description" content="Test your AI agent's skills and see how it ranks. Open-source evaluation tool.">
+<meta name="twitter:image" content="https://proofagent.dev/og.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "AI Agent Skill Leaderboard",
+  "description": "Test your AI agent's skills in coding, reasoning, math, writing, and summarization with standardized LLM-judge evaluations.",
+  "url": "https://proofagent.dev/skills",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "proofagent",
+    "url": "https://proofagent.dev"
+  }
+}
+</script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: oklch(0.145 0.012 255);
+    --bg-raised: oklch(0.175 0.014 255);
+    --bg-inset: oklch(0.125 0.01 255);
+    --border: oklch(0.26 0.012 255);
+    --border-subtle: oklch(0.22 0.01 255);
+    --text: oklch(0.92 0.008 255);
+    --text-2: oklch(0.68 0.01 255);
+    --text-3: oklch(0.48 0.008 255);
+    --text-4: oklch(0.36 0.006 255);
+    --pass: oklch(0.70 0.16 158);
+    --fail: oklch(0.68 0.19 22);
+    --warn: oklch(0.76 0.13 80);
+    --accent: oklch(0.70 0.14 260);
+  }
+
+  html { font-size: 16px; }
+  body {
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.6;
+  }
+
+  .wrap { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+
+  nav { padding: 24px 0; display: flex; justify-content: space-between; align-items: center; }
+  .nav-brand { font-family: 'IBM Plex Mono', monospace; font-size: 14px; font-weight: 500; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+  .nav-logo { width: 22px; height: 22px; }
+  .nav-links { display: flex; gap: 24px; list-style: none; }
+  .nav-links a { font-size: 13px; color: var(--text-3); text-decoration: none; transition: color 0.15s; }
+  .nav-links a:hover { color: var(--text); }
+
+  .page-header { padding: 64px 0 16px; }
+  .page-header h1 { font-size: 32px; font-weight: 300; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 12px; }
+  .page-header h1 strong { font-weight: 700; }
+  .page-header p { font-size: 15px; color: var(--text-2); max-width: 620px; line-height: 1.65; }
+  .page-header .updated { font-size: 12px; color: var(--text-4); margin-top: 8px; font-family: 'IBM Plex Mono', monospace; }
+
+  /* Tab bar */
+  .tabs { display: flex; gap: 0; margin: 32px 0 0; border-bottom: 1px solid var(--border); }
+  .tab {
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-3);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+    background: none;
+    border-top: none; border-left: none; border-right: none;
+    font-family: inherit;
+  }
+  .tab:hover { color: var(--text-2); }
+  .tab.active { color: var(--text); border-bottom-color: var(--accent); }
+
+  /* Skill leaderboard */
+  .lb { margin: 24px 0 40px; }
+
+  .lb-row {
+    display: grid;
+    grid-template-columns: 36px 180px repeat(5, 1fr) 70px 60px;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-subtle);
+    font-size: 13px;
+  }
+
+  .lb-header {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-4);
+    padding: 10px 16px;
+    background: var(--bg-raised);
+    border-bottom: 1px solid var(--border);
+    border-radius: 6px 6px 0 0;
+  }
+
+  .lb-body {
+    border: 1px solid var(--border);
+    border-radius: 0 0 6px 6px;
+  }
+  .lb-body .lb-row:last-child { border-bottom: none; }
+
+  .lb-rank {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--text-3);
+    text-align: center;
+  }
+
+  .lb-model { font-weight: 600; font-size: 14px; }
+
+  .lb-skill-score {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    text-align: center;
+  }
+
+  .lb-overall {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .lb-grade {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: right;
+  }
+
+  .score-high { color: var(--pass); }
+  .score-mid { color: var(--warn); }
+  .score-low { color: var(--fail); }
+
+  .grade-a { color: var(--pass); }
+  .grade-b { color: oklch(0.72 0.12 140); }
+  .grade-c { color: var(--warn); }
+  .grade-d { color: oklch(0.72 0.14 40); }
+  .grade-f { color: var(--fail); }
+
+  .badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    vertical-align: middle;
+    margin-left: 6px;
+  }
+  .badge-verified { background: oklch(0.25 0.08 158); color: var(--pass); }
+  .badge-community { background: oklch(0.22 0.06 260); color: var(--accent); }
+
+  /* CLI Walkthrough */
+  .get-started { padding: 48px 0; border-top: 1px solid var(--border-subtle); }
+  .get-started h2 { font-size: 22px; font-weight: 300; margin-bottom: 6px; }
+  .get-started h2 strong { font-weight: 600; }
+  .get-started > p { font-size: 15px; color: var(--text-2); margin-bottom: 32px; }
+
+  .cli-walkthrough { display: flex; flex-direction: column; gap: 32px; }
+
+  .cli-step-label {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 12px; font-size: 14px; font-weight: 500;
+  }
+  .cli-step-num {
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--accent); color: var(--bg);
+    border-radius: 50%; font-size: 13px; font-weight: 700;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .cli-block {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .cli-header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 14px;
+    background: var(--bg-raised);
+    border-bottom: 1px solid var(--border-subtle);
+    font-size: 11px; color: var(--text-4);
+  }
+  .cli-dots { display: flex; gap: 5px; }
+  .cli-dots span { width: 10px; height: 10px; border-radius: 50%; background: var(--border); }
+  .cli-title { flex: 1; font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.3px; }
+  .cli-copy {
+    background: none; border: 1px solid var(--border); border-radius: 4px;
+    color: var(--text-3); font-size: 11px; padding: 2px 8px; cursor: pointer;
+    font-family: 'IBM Plex Sans', sans-serif; transition: all 0.15s;
+  }
+  .cli-copy:hover { color: var(--text); border-color: var(--text-3); }
+
+  .cli-code {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px; line-height: 1.7;
+    padding: 16px 18px;
+    margin: 0;
+    background: var(--bg-inset);
+    border: none; border-radius: 0;
+    color: var(--text);
+    overflow-x: auto;
+    white-space: pre;
+  }
+
+  .cli-output { margin-top: 8px; }
+  .cli-output .cli-header { background: oklch(0.155 0.008 255); }
+  .cli-output-text { color: var(--text-2); font-size: 12px; line-height: 1.65; }
+  .cli-output-text strong { color: var(--text); font-weight: 600; }
+  .cli-output-text .g { color: var(--pass); }
+  .cli-output-text .y { color: var(--warn); }
+  .cli-output-text .r { color: var(--fail); }
+
+  .cli-comment { color: var(--text-4); }
+  .cli-kw { color: oklch(0.72 0.14 300); }
+  .cli-fn { color: oklch(0.75 0.14 220); }
+  .cli-str { color: var(--pass); }
+  .cli-num { color: oklch(0.76 0.13 80); }
+
+  /* Pytest section */
+  .pytest-section { padding: 40px 0; border-top: 1px solid var(--border-subtle); }
+  .pytest-section h2 { font-size: 22px; font-weight: 300; margin-bottom: 6px; }
+  .pytest-section h2 strong { font-weight: 600; }
+  .pytest-section > p { font-size: 14px; color: var(--text-2); margin-bottom: 20px; line-height: 1.65; }
+  .pytest-section .cli-block { max-width: 680px; }
+
+  /* Submit section */
+  .submit-section {
+    padding: 40px 0;
+    border-top: 1px solid var(--border-subtle);
+  }
+  .submit-section h2 { font-size: 22px; font-weight: 300; margin-bottom: 6px; }
+  .submit-section h2 strong { font-weight: 600; }
+  .submit-section p { font-size: 14px; color: var(--text-2); margin-bottom: 20px; line-height: 1.65; }
+
+  .submit-form {
+    display: flex;
+    gap: 12px;
+    max-width: 600px;
+  }
+
+  .submit-input {
+    flex: 1;
+    padding: 10px 14px;
+    background: var(--bg-inset);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    color: var(--text);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .submit-input:focus { border-color: var(--accent); }
+  .submit-input::placeholder { color: var(--text-4); }
+
+  .submit-btn {
+    padding: 10px 20px;
+    background: var(--text);
+    color: var(--bg);
+    border: none;
+    border-radius: 5px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    white-space: nowrap;
+  }
+  .submit-btn:hover { opacity: 0.85; }
+  .submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .submit-status {
+    margin-top: 12px;
+    font-size: 13px;
+    min-height: 20px;
+  }
+
+  /* How it works */
+  .how-section {
+    padding: 40px 0;
+    border-top: 1px solid var(--border-subtle);
+  }
+  .how-section h2 { font-size: 18px; font-weight: 600; margin-bottom: 16px; }
+
+  .how-steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .how-step {
+    padding: 20px;
+    background: var(--bg-raised);
+    border: 1px solid var(--border-subtle);
+    border-radius: 6px;
+  }
+  .how-step-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .how-step h3 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .how-step p { font-size: 13px; color: var(--text-2); line-height: 1.5; }
+
+  /* CTA */
+  .cta { padding: 48px 0; border-top: 1px solid var(--border-subtle); }
+  .cta h2 { font-size: 22px; font-weight: 300; margin-bottom: 8px; }
+  .cta h2 strong { font-weight: 600; }
+  .cta p { color: var(--text-2); font-size: 15px; margin-bottom: 24px; }
+  .cta-buttons { display: flex; gap: 12px; }
+
+  .btn { display: inline-block; font-family: 'IBM Plex Sans', sans-serif; font-size: 13px; font-weight: 500; padding: 10px 20px; border-radius: 5px; text-decoration: none; transition: all 0.15s; }
+  .btn-primary { background: var(--text); color: var(--bg); }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-ghost { border: 1px solid var(--border); color: var(--text-2); }
+  .btn-ghost:hover { border-color: var(--text-3); color: var(--text); }
+
+  footer { padding: 24px 0 40px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; font-size: 12px; color: var(--text-4); }
+  footer a { color: var(--text-3); text-decoration: none; }
+  footer a:hover { color: var(--text); }
+
+  @media (max-width: 600px) {
+    .page-header h1 { font-size: 24px; }
+    .lb-row { grid-template-columns: 28px 100px repeat(5, 1fr) 50px 40px; gap: 4px; padding: 10px 8px; font-size: 11px; }
+    .lb-model { font-size: 11px; }
+    .how-steps { grid-template-columns: 1fr; }
+    .submit-form { flex-direction: column; }
+    .cta-buttons { flex-direction: column; }
+    .cli-code { font-size: 11px; padding: 12px 14px; }
+    .cli-output-text { font-size: 10px; }
+    .get-started h2 { font-size: 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav>
+    <a href="/" class="nav-brand"><svg class="nav-logo" role="img" aria-label="proofagent logo" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" rx="3" fill="currentColor"/><path d="M8 17 L13 22 L24 11" stroke="var(--bg)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>proofagent</a>
+    <ul class="nav-links">
+      <li><a href="/quickstart">Quickstart</a></li>
+      <li><a href="/leaderboard">Safety</a></li>
+      <li><a href="/skills" style="color:var(--text)">Skills</a></li>
+      <li><a href="/blog/">Blog</a></li>
+      <li><a href="https://github.com/camgitt/proofagent">GitHub</a></li>
+    </ul>
+  </nav>
+
+  <section class="page-header">
+    <h1><strong>Prove your agent works.</strong> Show the scores.</h1>
+    <p>Run standardized skill evaluations against your AI agent. Get scored by an LLM judge. Submit your results to the public leaderboard. Scores reflect a single evaluation run &mdash; not a comprehensive assessment.</p>
+    <div class="updated">Submit your results: <code>proofagent skill submit &lt;path&gt;</code></div>
+  </section>
+
+  <!-- Skill category tabs -->
+  <div class="tabs">
+    <button class="tab active" data-tab="overall">Overall</button>
+    <button class="tab" data-tab="coding">Coding</button>
+    <button class="tab" data-tab="reasoning">Reasoning</button>
+    <button class="tab" data-tab="math">Math</button>
+    <button class="tab" data-tab="writing">Writing</button>
+    <button class="tab" data-tab="summarization">Summarization</button>
+  </div>
+
+  <!-- Overall view -->
+  <div class="lb" id="view-overall">
+    <div class="lb-row lb-header">
+      <span>#</span>
+      <span>Model</span>
+      <span style="text-align:center">Code</span>
+      <span style="text-align:center">Reason</span>
+      <span style="text-align:center">Math</span>
+      <span style="text-align:center">Write</span>
+      <span style="text-align:center">Summ</span>
+      <span style="text-align:center">Avg</span>
+      <span style="text-align:right">Grade</span>
+    </div>
+    <div class="lb-body" id="lb-overall"></div>
+  </div>
+
+  <!-- Single skill view (hidden by default) -->
+  <div class="lb" id="view-single" style="display:none;">
+    <div class="lb-row" style="grid-template-columns: 36px 180px 1fr 80px 60px;">
+      <span class="lb-header" style="background:none;">#</span>
+      <span class="lb-header" style="background:none;">Model</span>
+      <span class="lb-header" style="background:none; text-align:center;">Score</span>
+      <span class="lb-header" style="background:none; text-align:center;">Avg</span>
+      <span class="lb-header" style="background:none; text-align:right;">Grade</span>
+    </div>
+    <div class="lb-body" id="lb-single"></div>
+  </div>
+
+  <!-- Get on the board -->
+  <section class="get-started">
+    <h2><strong>Get on the board</strong> in 3 commands</h2>
+    <p>Install proofagent, run the skill proof, submit it. That's it.</p>
+
+    <div class="cli-walkthrough">
+      <div class="cli-step">
+        <div class="cli-step-label">
+          <span class="cli-step-num">1</span>
+          <span>Install</span>
+        </div>
+        <div class="cli-block">
+          <div class="cli-header">
+            <span class="cli-dots"><span></span><span></span><span></span></span>
+            <span class="cli-title">Terminal</span>
+            <button class="cli-copy" onclick="copyBlock(this)">Copy</button>
+          </div>
+          <pre class="cli-code">pip install proofagent</pre>
+        </div>
+      </div>
+
+      <div class="cli-step">
+        <div class="cli-step-label">
+          <span class="cli-step-num">2</span>
+          <span>Run skill proofs against your model</span>
+        </div>
+        <div class="cli-block">
+          <div class="cli-header">
+            <span class="cli-dots"><span></span><span></span><span></span></span>
+            <span class="cli-title">Terminal</span>
+            <button class="cli-copy" onclick="copyBlock(this)">Copy</button>
+          </div>
+          <pre class="cli-code"><span class="cli-comment"># Test all 5 skills (coding, reasoning, math, writing, summarization)</span>
+proofagent skill run claude-sonnet-4-6 --skill all
+
+<span class="cli-comment"># Or test just one skill</span>
+proofagent skill run claude-sonnet-4-6 --skill coding
+
+<span class="cli-comment"># Use a different judge model</span>
+proofagent skill run gpt-4o --skill all --judge anthropic/claude-sonnet-4-6</pre>
+        </div>
+        <div class="cli-output">
+          <div class="cli-header">
+            <span class="cli-dots"><span></span><span></span><span></span></span>
+            <span class="cli-title">Output</span>
+          </div>
+          <pre class="cli-code cli-output-text">  <strong>proofagent skill run</strong> — Skill Proof
+  Model: claude-sonnet-4-6
+  Judge: openai/gpt-4o-mini
+
+  Running 5 skill packs: coding, reasoning, math, writing, summarization
+
+  Skill              Score    Grade
+  ------------------ ------- -------
+  <span class="g">Coding              9.2/10      A+</span>
+  <span class="g">Reasoning           9.0/10      A+</span>
+  <span class="g">Math                8.8/10       A</span>
+  <span class="g">Writing             9.4/10      A+</span>
+  <span class="g">Summarization       9.2/10      A+</span>
+
+  Overall: <span class="g">9.1/10</span> — Grade: <span class="g">A+</span>
+  Cost: <span class="y">$0.0847</span>
+  Saved: .proofagent/skills/skill_claude-sonnet-4-6_20260318_120000.json
+  Fingerprint: a3f8c2d1e5b74901</pre>
+        </div>
+      </div>
+
+      <div class="cli-step">
+        <div class="cli-step-label">
+          <span class="cli-step-num">3</span>
+          <span>Submit to the leaderboard</span>
+        </div>
+        <div class="cli-block">
+          <div class="cli-header">
+            <span class="cli-dots"><span></span><span></span><span></span></span>
+            <span class="cli-title">Terminal</span>
+            <button class="cli-copy" onclick="copyBlock(this)">Copy</button>
+          </div>
+          <pre class="cli-code"><span class="cli-comment"># Submit the proof file</span>
+proofagent skill submit .proofagent/skills/skill_claude-sonnet-4-6_20260318_120000.json
+
+<span class="cli-comment"># Or submit from a URL</span>
+proofagent skill submit https://your-site.com/proof.json</pre>
+        </div>
+        <div class="cli-output">
+          <div class="cli-header">
+            <span class="cli-dots"><span></span><span></span><span></span></span>
+            <span class="cli-title">Output</span>
+          </div>
+          <pre class="cli-code cli-output-text">  <strong>proofagent skill submit</strong>
+
+  Model: <strong>claude-sonnet-4-6</strong>
+  Fingerprint: a3f8c2d1e5b74901
+
+  Coding              <span class="g">9.2/10</span>       <span class="g">A+</span>
+  Reasoning           <span class="g">9.0/10</span>       <span class="g">A+</span>
+  Math                <span class="g">8.8/10</span>        <span class="g">A</span>
+  Writing             <span class="g">9.4/10</span>       <span class="g">A+</span>
+  Summarization       <span class="g">9.2/10</span>       <span class="g">A+</span>
+
+  Overall: 9.1/10 — Grade: A+
+
+  <span class="g">Added</span> claude-sonnet-4-6 to leaderboard
+  Saved: .proofagent/leaderboard.json
+
+  #    Model                        Score   Grade
+  ---- ------------------------- -------- -------
+  1    claude-sonnet-4-6             9.1      A+ &lt;-</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Use in pytest -->
+  <section class="pytest-section">
+    <h2><strong>Use in your tests</strong></h2>
+    <p>Add skill assertions directly in your pytest suite with the <code>skill_score()</code> assertion.</p>
+    <div class="cli-block">
+      <div class="cli-header">
+        <span class="cli-dots"><span></span><span></span><span></span></span>
+        <span class="cli-title">test_my_agent.py</span>
+        <button class="cli-copy" onclick="copyBlock(this)">Copy</button>
+      </div>
+      <pre class="cli-code"><span class="cli-kw">from</span> proofagent <span class="cli-kw">import</span> expect, LLMResult
+
+<span class="cli-kw">def</span> <span class="cli-fn">test_agent_can_code</span>():
+    result = my_agent.run(<span class="cli-str">"Write a fibonacci function"</span>)
+    expect(result).skill_score(
+        rubric=<span class="cli-str">"Correct fibonacci implementation, handles edge cases, clean code"</span>,
+        min_score=<span class="cli-num">7</span>,
+    )
+
+<span class="cli-kw">def</span> <span class="cli-fn">test_agent_can_summarize</span>():
+    result = my_agent.run(<span class="cli-str">"Summarize the key points of this document: ..."</span>)
+    expect(result).skill_score(
+        rubric=<span class="cli-str">"Accurate, concise summary covering all main points"</span>,
+        min_score=<span class="cli-num">6</span>,
+    )</pre>
+    </div>
+  </section>
+
+  <!-- Submit via web -->
+  <section class="submit-section">
+    <h2><strong>Or submit here</strong></h2>
+    <p>Paste a proof URL or the raw JSON from your proof file. We'll validate it and add your model to the board.</p>
+
+    <div class="submit-form">
+      <input type="text" class="submit-input" id="proof-url" placeholder="https://your-host.com/proof.json or paste raw JSON..." />
+      <button class="submit-btn" id="submit-btn" onclick="submitProof()">Submit Proof</button>
+    </div>
+    <div class="submit-status" id="submit-status"></div>
+    <p style="margin-top:16px;font-size:12px;color:var(--text-4);line-height:1.5;max-width:600px;">Note: Submissions are stored locally in your browser. A persistent leaderboard is coming soon.</p>
+  </section>
+
+  <!-- How it works -->
+  <section class="how-section">
+    <h2>How skill proofs work</h2>
+    <div class="how-steps">
+      <div class="how-step">
+        <div class="how-step-num">1</div>
+        <h3>Challenge</h3>
+        <p>5 challenges per skill, each with a rubric defining what "good" looks like. No ambiguity.</p>
+      </div>
+      <div class="how-step">
+        <div class="how-step-num">2</div>
+        <h3>Judge</h3>
+        <p>An LLM judge scores each response 0-10 against the rubric at temperature 0. Scores may vary slightly between runs.</p>
+      </div>
+      <div class="how-step">
+        <div class="how-step-num">3</div>
+        <h3>Report</h3>
+        <p>Results get a SHA-256 fingerprint for tamper detection. This is an evaluation report, not a certification.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <h2><strong>Prove your agent's skills</strong></h2>
+    <p>Three commands. Verifiable scores. On the leaderboard.</p>
+    <div class="cta-buttons">
+      <a href="https://github.com/camgitt/proofagent" class="btn btn-primary">Get proofagent</a>
+      <a href="/leaderboard" class="btn btn-ghost">Safety Leaderboard</a>
+      <a href="/" class="btn btn-ghost">Home</a>
+    </div>
+  </section>
+
+  <footer>
+    <div style="margin-bottom:10px;color:var(--text-4);font-size:11px;line-height:1.5;max-width:580px;">Scores are self-reported evaluation results using LLM-as-judge methodology. proofagent is a testing tool, not a certification authority. Scores do not constitute a warranty, endorsement, or safety guarantee. Model performance varies by configuration and prompt.</div>
+    <div style="display:flex;justify-content:space-between;width:100%;">
+      <span>proofagent &mdash; MIT License</span>
+      <span><a href="https://github.com/camgitt/proofagent">source</a> &middot; <a href="https://pypi.org/project/proofagent/">pypi</a> &middot; <a href="/terms">terms</a></span>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+// Escape HTML to prevent XSS
+function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+// Copy code block to clipboard
+function copyBlock(btn) {
+  const block = btn.closest('.cli-block') || btn.closest('.cli-output');
+  const code = block.querySelector('.cli-code');
+  // Get text content without HTML tags, strip comment-only lines for clean copy
+  const text = code.textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = 'Copied!';
+    btn.style.color = 'var(--pass)';
+    btn.style.borderColor = 'var(--pass)';
+    setTimeout(() => {
+      btn.textContent = orig;
+      btn.style.color = '';
+      btn.style.borderColor = '';
+    }, 1500);
+  });
+}
+
+// Skill leaderboard data
+// Each entry: { model, coding, reasoning, math, writing, summarization, verified, fingerprint }
+// Scores are 0.0-10.0 averages
+// To populate with real data, run: proofagent skill run <model> --skill all
+// Then submit: proofagent skill submit .proofagent/skills/<file>.json
+// To populate with real data, run: python3 run_skill_leaderboard.py
+// Then paste the output JavaScript array here.
+// Models below were tested on [date] using proofagent skill run.
+const entries = [];
+
+// Computed fields
+entries.forEach(e => {
+  const skills = [e.coding, e.reasoning, e.math, e.writing, e.summarization];
+  e.avg = skills.reduce((a, b) => a + b, 0) / skills.length;
+});
+
+// Sort by avg descending
+entries.sort((a, b) => b.avg - a.avg);
+
+function gradeFor(score) {
+  if (score >= 9.0) return ['A+', 'grade-a'];
+  if (score >= 8.0) return ['A', 'grade-a'];
+  if (score >= 7.0) return ['B', 'grade-b'];
+  if (score >= 6.0) return ['C', 'grade-c'];
+  if (score >= 5.0) return ['D', 'grade-d'];
+  return ['F', 'grade-f'];
+}
+
+function scoreClass(score) {
+  if (score >= 8.0) return 'score-high';
+  if (score >= 6.0) return 'score-mid';
+  return 'score-low';
+}
+
+function scoreCell(score) {
+  return `<span class="${scoreClass(score)}">${score.toFixed(1)}</span>`;
+}
+
+// Render overall leaderboard
+function renderOverall() {
+  const body = document.getElementById('lb-overall');
+  body.innerHTML = '';
+  if (entries.length === 0) {
+    body.innerHTML = '<div style="padding:40px 16px;text-align:center;color:var(--text-3);font-size:14px;line-height:1.6;">No skill proofs submitted yet. Be the first &mdash; run <code style="font-family:\'IBM Plex Mono\',monospace;font-size:13px;background:var(--bg-inset);padding:2px 6px;border-radius:3px;">proofagent skill run &lt;model&gt; --skill all</code></div>';
+    return;
+  }
+  entries.forEach((e, i) => {
+    const [g, gc] = gradeFor(e.avg);
+    const badge = e.verified
+      ? '<span class="badge badge-verified">self-reported</span>'
+      : '<span class="badge badge-community">unverified</span>';
+    const row = document.createElement('div');
+    row.className = 'lb-row';
+    row.innerHTML = `
+      <div class="lb-rank">${i + 1}</div>
+      <div class="lb-model">${esc(e.model)} ${badge}</div>
+      <div class="lb-skill-score">${scoreCell(e.coding)}</div>
+      <div class="lb-skill-score">${scoreCell(e.reasoning)}</div>
+      <div class="lb-skill-score">${scoreCell(e.math)}</div>
+      <div class="lb-skill-score">${scoreCell(e.writing)}</div>
+      <div class="lb-skill-score">${scoreCell(e.summarization)}</div>
+      <div class="lb-overall ${scoreClass(e.avg)}">${e.avg.toFixed(1)}</div>
+      <div class="lb-grade ${gc}">${g}</div>
+    `;
+    body.appendChild(row);
+  });
+}
+
+// Render single skill view
+function renderSingle(skill) {
+  const sorted = [...entries].sort((a, b) => b[skill] - a[skill]);
+  const body = document.getElementById('lb-single');
+  body.innerHTML = '';
+  if (sorted.length === 0) {
+    body.innerHTML = '<div style="padding:40px 16px;text-align:center;color:var(--text-3);font-size:14px;line-height:1.6;">No skill proofs submitted yet. Be the first &mdash; run <code style="font-family:\'IBM Plex Mono\',monospace;font-size:13px;background:var(--bg-inset);padding:2px 6px;border-radius:3px;">proofagent skill run &lt;model&gt; --skill all</code></div>';
+    return;
+  }
+  sorted.forEach((e, i) => {
+    const score = e[skill];
+    const [g, gc] = gradeFor(score);
+    const badge = e.verified
+      ? '<span class="badge badge-verified">self-reported</span>'
+      : '<span class="badge badge-community">unverified</span>';
+
+    const row = document.createElement('div');
+    row.className = 'lb-row';
+    row.style.gridTemplateColumns = '36px 180px 1fr 80px 60px';
+    row.innerHTML = `
+      <div class="lb-rank">${i + 1}</div>
+      <div class="lb-model">${esc(e.model)} ${badge}</div>
+      <div class="lb-skill-score">
+        <div style="display:flex;align-items:center;gap:8px;justify-content:center;">
+          <div style="flex:1;max-width:200px;height:8px;background:var(--bg-inset);border-radius:4px;overflow:hidden;">
+            <div style="width:${score * 10}%;height:100%;background:${score >= 8 ? 'var(--pass)' : score >= 6 ? 'var(--warn)' : 'var(--fail)'};border-radius:4px;"></div>
+          </div>
+          <span class="${scoreClass(score)}">${score.toFixed(1)}/10</span>
+        </div>
+      </div>
+      <div class="lb-overall ${scoreClass(score)}">${score.toFixed(1)}</div>
+      <div class="lb-grade ${gc}">${g}</div>
+    `;
+    body.appendChild(row);
+  });
+}
+
+// Tab switching
+const tabs = document.querySelectorAll('.tab');
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    tabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+
+    const tabName = tab.dataset.tab;
+    if (tabName === 'overall') {
+      document.getElementById('view-overall').style.display = '';
+      document.getElementById('view-single').style.display = 'none';
+      renderOverall();
+    } else {
+      document.getElementById('view-overall').style.display = 'none';
+      document.getElementById('view-single').style.display = '';
+      renderSingle(tabName);
+    }
+  });
+});
+
+// Initial render
+renderOverall();
+
+// Submit proof
+async function submitProof() {
+  const input = document.getElementById('proof-url').value.trim();
+  const status = document.getElementById('submit-status');
+  const btn = document.getElementById('submit-btn');
+
+  if (!input) {
+    status.innerHTML = '<span style="color:var(--fail)">Please enter a proof URL or JSON.</span>';
+    return;
+  }
+
+  btn.disabled = true;
+  status.innerHTML = '<span style="color:var(--text-2)">Validating proof...</span>';
+
+  try {
+    let proofData;
+
+    // Try parsing as JSON first
+    try {
+      proofData = JSON.parse(input);
+    } catch {
+      // Not valid JSON — validate as URL before fetching
+      if (!input.startsWith('https://') && !input.startsWith('http://')) {
+        throw new Error('Input must be a valid URL (starting with https:// or http://) or valid JSON.');
+      }
+      const resp = await fetch(input);
+      if (!resp.ok) throw new Error(`Failed to fetch: ${resp.status}`);
+      proofData = await resp.json();
+    }
+
+    // Validate proof structure
+    if (!proofData.model || !proofData.skills || !Array.isArray(proofData.skills)) {
+      throw new Error('Invalid proof format. Must have "model" and "skills" array.');
+    }
+
+    const requiredSkills = ['coding', 'reasoning', 'math', 'writing', 'summarization'];
+    const proofSkills = proofData.skills.map(s => s.skill);
+    const missing = requiredSkills.filter(s => !proofSkills.includes(s));
+
+    if (missing.length > 0) {
+      throw new Error(`Missing skill proofs: ${missing.join(', ')}. Run: proofagent skill ${proofData.model} --skill all`);
+    }
+
+    // Check for duplicate
+    const existing = entries.find(e => e.model.toLowerCase() === proofData.model.toLowerCase());
+
+    // Build entry from proof
+    const newEntry = {
+      model: proofData.model,
+      verified: false,
+    };
+
+    proofData.skills.forEach(s => {
+      newEntry[s.skill] = s.avg_score;
+    });
+
+    const skills = [newEntry.coding, newEntry.reasoning, newEntry.math, newEntry.writing, newEntry.summarization];
+    newEntry.avg = skills.reduce((a, b) => a + b, 0) / skills.length;
+    newEntry.fingerprint = proofData.fingerprint || 'unverified';
+
+    if (existing) {
+      // Update existing
+      Object.assign(existing, newEntry);
+      entries.sort((a, b) => b.avg - a.avg);
+      status.innerHTML = `<span style="color:var(--pass)">Updated ${esc(proofData.model)} on the leaderboard. Score: ${newEntry.avg.toFixed(1)}/10</span>`;
+    } else {
+      // Add new
+      entries.push(newEntry);
+      entries.sort((a, b) => b.avg - a.avg);
+      status.innerHTML = `<span style="color:var(--pass)">Added ${esc(proofData.model)} to the leaderboard! Score: ${newEntry.avg.toFixed(1)}/10</span>`;
+    }
+
+    // Re-render current view
+    const activeTab = document.querySelector('.tab.active').dataset.tab;
+    if (activeTab === 'overall') {
+      renderOverall();
+    } else {
+      renderSingle(activeTab);
+    }
+
+  } catch (err) {
+    status.innerHTML = `<span style="color:var(--fail)">${esc(err.message)}</span>`;
+  }
+
+  btn.disabled = false;
+}
+</script>
+</body>
+</html>

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import warnings
 
 from proofagent.providers.base import Provider
 from proofagent.result import LLMResult, ToolCall
@@ -12,6 +13,7 @@ _COSTS = {
     "claude-opus-4-6": {"input": 0.015, "output": 0.075},
     "claude-sonnet-4-6": {"input": 0.003, "output": 0.015},
     "claude-sonnet-4-20250514": {"input": 0.003, "output": 0.015},
+    "claude-haiku-4-5": {"input": 0.0008, "output": 0.004},
     "claude-haiku-4-5-20251001": {"input": 0.0008, "output": 0.004},
 }
 
@@ -104,5 +106,12 @@ class AnthropicProvider(Provider):
     def _estimate_cost(
         self, model: str, input_tokens: int, output_tokens: int
     ) -> float:
-        costs = _COSTS.get(model, {"input": 0.003, "output": 0.015})
+        costs = _COSTS.get(model)
+        if costs is None:
+            warnings.warn(
+                f"proofagent: using fallback pricing for unknown model '{model}'. "
+                "Cost assertions may be inaccurate.",
+                stacklevel=2,
+            )
+            costs = {"input": 0.003, "output": 0.015}
         return (input_tokens * costs["input"] + output_tokens * costs["output"]) / 1000

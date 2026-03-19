@@ -136,7 +136,10 @@ def run_eval(test_path: str, model: str) -> ModelResult:
     total = passed + failed
     score = passed / total if total > 0 else 0.0
 
-    # Estimate cost from the model cost table (rough: assume ~1K tokens per test)
+    # NOTE: This is a rough estimate assuming ~1K tokens per test (500 input + 200 output).
+    # Actual token usage will vary significantly by prompt and response length.
+    # If actual cost data is available from LLMResult (e.g. via provider billing),
+    # prefer that over this estimate.
     costs = MODEL_COSTS.get(model, {"input": 1.00, "output": 5.00})
     estimated_cost_per_test = (500 * costs["input"] + 200 * costs["output"]) / 1_000_000
     total_cost = estimated_cost_per_test * total

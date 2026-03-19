@@ -43,6 +43,8 @@ def compare(
     model_a: str,
     model_b: str,
     provider: str | None = None,
+    provider_a: str | None = None,
+    provider_b: str | None = None,
     assertions: list[Callable[[LLMResult], bool]] | None = None,
     system: str | None = None,
     **kwargs,
@@ -53,7 +55,9 @@ def compare(
         prompt: The user prompt to send to both models.
         model_a: First model identifier.
         model_b: Second model identifier.
-        provider: Provider name (auto-detected if None).
+        provider: Provider name used for both models (auto-detected if None).
+        provider_a: Provider name for model_a (overrides provider).
+        provider_b: Provider name for model_b (overrides provider).
         assertions: Optional list of assertion functions. Each takes an LLMResult
                     and returns True if the assertion passes, False otherwise.
         system: Optional system message.
@@ -62,15 +66,16 @@ def compare(
     Returns:
         A CompareResult with both outputs and an optional winner.
     """
-    llm = get_provider(name=provider)
+    llm_a = get_provider(name=provider_a or provider)
+    llm_b = get_provider(name=provider_b or provider)
 
     messages = []
     if system:
         messages.append({"role": "system", "content": system})
     messages.append({"role": "user", "content": prompt})
 
-    result_a = llm.complete(messages=messages, model=model_a, **kwargs)
-    result_b = llm.complete(messages=messages, model=model_b, **kwargs)
+    result_a = llm_a.complete(messages=messages, model=model_a, **kwargs)
+    result_b = llm_b.complete(messages=messages, model=model_b, **kwargs)
 
     winner = None
     assertion_results: dict = {"a": {}, "b": {}}

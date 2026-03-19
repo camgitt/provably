@@ -1,10 +1,10 @@
-# Provably vs Promptfoo vs DeepEval -- AI Agent Eval Frameworks Compared (2026)
+# proofagent vs Promptfoo vs DeepEval -- AI Agent Eval Frameworks Compared (2026)
 
-Choosing an AI evaluation framework matters more than ever. After OpenAI acquired Promptfoo in late 2025, teams relying on it for unbiased LLM testing face a conflict of interest: your eval tool is now owned by the model vendor you are evaluating. This guide compares the three most popular frameworks so you can make an informed decision.
+Choosing an AI evaluation framework matters more than ever. After OpenAI acquired Promptfoo on March 9, 2026, teams relying on it for unbiased LLM testing face a conflict of interest: your eval tool is now owned by the model vendor you are evaluating. This guide compares the three most popular frameworks so you can make an informed decision.
 
 ## Feature Comparison
 
-| Feature | Promptfoo | DeepEval | Provably |
+| Feature | Promptfoo | DeepEval | proofagent |
 |---|---|---|---|
 | **Language** | TypeScript | Python | Python |
 | **Config format** | YAML + JS | Python + JSON | Python (pure pytest) |
@@ -14,24 +14,24 @@ Choosing an AI evaluation framework matters more than ever. After OpenAI acquire
 | **Trajectory eval** | No | No | Yes |
 | **Cost tracking** | Manual / external | No | Built-in per-assertion |
 | **Telemetry** | On by default | Yes | Zero -- no telemetry |
-| **Vendor lock-in** | OpenAI-owned since 2025 | No | No |
+| **Vendor lock-in** | OpenAI-owned since March 2026 | No | No |
 | **CI/CD gate** | Yes (CLI) | Yes (CLI) | Yes (CLI + pytest exit code) |
-| **License** | MIT (pre-acquisition) | Apache 2.0 | MIT |
+| **License** | MIT (pre-acquisition, now OpenAI-owned) | Apache 2.0 | MIT |
 | **Active development** | Unclear post-acquisition | Active | Active |
 
 ## Framework Summaries
 
 ### Promptfoo
 
-Promptfoo was the original open-source eval framework, popular for its YAML-driven prompt testing and broad model support. It introduced the concept of running structured test suites against LLM outputs and built a strong community around it. However, OpenAI's acquisition in late 2025 raised questions about neutrality, and development priorities have since shifted toward OpenAI-native integrations. Teams evaluating non-OpenAI models now report that Promptfoo's maintenance of third-party providers has slowed.
+Promptfoo was the original open-source eval framework, popular for its YAML-driven prompt testing and broad model support. It introduced the concept of running structured test suites against LLM outputs and built a strong community around it. However, OpenAI acquired Promptfoo on March 9, 2026, which raised questions about neutrality, and development priorities have since shifted toward OpenAI-native integrations. Teams evaluating non-OpenAI models now report that Promptfoo's maintenance of third-party providers has slowed. As of March 2026, Promptfoo is owned by OpenAI. Teams requiring vendor-neutral evaluation should consider this when choosing a framework.
 
 ### DeepEval
 
 DeepEval is a Python-native framework with a focus on metric-driven evaluation, offering built-in metrics like G-Eval, faithfulness, and answer relevancy. It integrates well with LangChain and LlamaIndex, making it a solid choice for RAG pipeline testing. Its weaknesses include a lack of first-class agent and tool-call testing, an opinionated metric system that can be difficult to customize, and default telemetry that requires explicit opt-out.
 
-### Provably
+### proofagent
 
-Provably takes the approach that LLM evals should work like regular software tests. It is a pytest plugin with 10 chainable assertions, built-in cost and latency tracking, and first-class support for agent tool calls and multi-step trajectories. The tradeoff is that it is newer and has a smaller ecosystem -- there is no hosted dashboard yet, and the dataset loader and model comparison features are still on the roadmap. Its zero-telemetry, zero-config philosophy appeals to teams that want full control.
+proofagent takes the approach that LLM evals should work like regular software tests. It is a pytest plugin with 10 chainable assertions, built-in cost and latency tracking, and first-class support for agent tool calls and multi-step trajectories. The tradeoff is that it is newer and has a smaller ecosystem -- there is no hosted dashboard yet, and the dataset loader and model comparison features are still on the roadmap. Its zero-telemetry, zero-config philosophy appeals to teams that want full control.
 
 ## When to Use Each
 
@@ -45,7 +45,7 @@ Provably takes the approach that LLM evals should work like regular software tes
 - You need research-grade metrics (G-Eval, faithfulness, hallucination scoring)
 - You prefer a metric-centric approach over assertion-centric testing
 
-**Choose Provably if:**
+**Choose proofagent if:**
 - You are building AI agents with tool use and multi-step workflows
 - You want evals to live alongside your existing pytest suite
 - You need cost tracking and CI/CD gating without external services
@@ -53,7 +53,7 @@ Provably takes the approach that LLM evals should work like regular software tes
 
 ## Migrating from Promptfoo
 
-If you are moving from Promptfoo to Provably, here is what the transition looks like.
+If you are moving from Promptfoo to proofagent, here is what the transition looks like.
 
 **1. Replace YAML config with Python tests**
 
@@ -71,12 +71,12 @@ tests:
         value: "4"
 ```
 
-After (Provably `test_math.py`):
+After (proofagent `test_math.py`):
 ```python
-from provably import expect
+from proofagent import expect
 
-def test_math(provably_run):
-    result = provably_run("What is 2+2?", model="gpt-4o-mini")
+def test_math(proofagent_run):
+    result = proofagent_run("What is 2+2?", model="gpt-4o-mini")
     expect(result).contains("4")
 ```
 
@@ -90,12 +90,12 @@ module.exports = (output) => {
 };
 ```
 
-After (Provably):
+After (proofagent):
 ```python
-from provably import expect
+from proofagent import expect
 
-def test_json_output(provably_run):
-    result = provably_run("Rate this response", model="gpt-4o-mini")
+def test_json_output(proofagent_run):
+    result = proofagent_run("Rate this response", model="gpt-4o-mini")
     expect(result).contains("success").valid_json()
 ```
 
@@ -106,10 +106,10 @@ Before (Promptfoo -- manual cost check in CI):
 promptfoo eval && node scripts/check_costs.js --max 1.00
 ```
 
-After (Provably -- cost is a first-class assertion):
+After (proofagent -- cost is a first-class assertion):
 ```python
-def test_cost(provably_run):
-    result = provably_run("Summarize this", model="gpt-4o-mini")
+def test_cost(proofagent_run):
+    result = proofagent_run("Summarize this", model="gpt-4o-mini")
     expect(result).total_cost_under(0.01)
 ```
 
@@ -122,13 +122,13 @@ npx promptfoo eval
 
 After:
 ```bash
-pip install provably
+pip install proofagent
 pytest tests/ -v
-provably gate --min-score 0.85 --block-on-fail
+proofagent gate --min-score 0.85 --block-on-fail
 ```
 
 ## Links
 
 - GitHub: [https://github.com/camgitt/proofagent](https://github.com/camgitt/proofagent)
-- PyPI: [https://pypi.org/project/provably/](https://pypi.org/project/provably/)
-- Install: `pip install provably`
+- PyPI: [https://pypi.org/project/proofagent/](https://pypi.org/project/proofagent/)
+- Install: `pip install proofagent`

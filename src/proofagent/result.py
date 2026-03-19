@@ -38,7 +38,7 @@ class LLMResult:
     """Captures everything about a single LLM call or multi-step agent run.
 
     This is the central data object that flows through the entire eval pipeline.
-    Assertions, reports, and compliance certificates all operate on LLMResult.
+    Assertions and reports operate on LLMResult.
     """
 
     text: str

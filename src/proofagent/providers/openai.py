@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import warnings
 
 from proofagent.providers.base import Provider
 from proofagent.result import LLMResult, ToolCall
@@ -92,5 +93,12 @@ class OpenAIProvider(Provider):
     def _estimate_cost(
         self, model: str, input_tokens: int, output_tokens: int
     ) -> float:
-        costs = _COSTS.get(model, {"input": 0.001, "output": 0.002})
+        costs = _COSTS.get(model)
+        if costs is None:
+            warnings.warn(
+                f"proofagent: using fallback pricing for unknown model '{model}'. "
+                "Cost assertions may be inaccurate.",
+                stacklevel=2,
+            )
+            costs = {"input": 0.001, "output": 0.002}
         return (input_tokens * costs["input"] + output_tokens * costs["output"]) / 1000

@@ -1,5 +1,5 @@
 <p align="center">
-  <h1 align="center">proofagent™</h1>
+  <h1 align="center">proofagent</h1>
   <p align="center"><strong>pytest for AI agents</strong></p>
 </p>
 
@@ -167,9 +167,9 @@ Or manually:
     ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
 ```
 
-## Compliance reports
+## Evaluation reports
 
-Generate an HTML report for stakeholders:
+Generate an HTML summary of your test results:
 
 ```bash
 proofagent report --format html > report.html
@@ -192,6 +192,13 @@ Add to your README:
 ```markdown
 [![Tested with proofagent](https://proofagent.dev/badge.svg)](https://proofagent.dev)
 ```
+
+## Why proofagent
+
+- **Vendor-independent.** Your eval framework should not be owned by the model vendor you are evaluating. After OpenAI acquired Promptfoo in March 2026, proofagent is one of the few remaining open-source eval tools with no corporate model-provider affiliation.
+- **Zero telemetry.** No data leaves your machine. No cloud. No signup.
+- **Agent-native.** Built for tool calls, multi-step trajectories, and cost tracking -- not just prompt testing.
+- **MIT licensed.** Free to use, modify, and distribute.
 
 ## Links
 

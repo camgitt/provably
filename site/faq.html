@@ -8,9 +8,9 @@
 <meta name="description" content="Frequently asked questions about proofagent — the open-source pytest plugin for testing AI agents.">
 <meta property="og:title" content="FAQ — proofagent">
 <meta property="og:description" content="Frequently asked questions about proofagent.">
-<meta property="og:image" content="https://proofagent.dev/og.svg">
+<meta property="og:image" content="https://proofagent.dev/og.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://proofagent.dev/og.svg">
+<meta name="twitter:image" content="https://proofagent.dev/og.png">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
@@ -228,11 +228,12 @@
 <div class="wrap">
 
   <nav>
-    <a href="/" class="nav-brand"><svg class="nav-logo" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" rx="3" fill="currentColor"/><path d="M8 17 L13 22 L24 11" stroke="var(--bg)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>proofagent™</a>
+    <a href="/" class="nav-brand"><svg class="nav-logo" role="img" aria-label="proofagent logo" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" rx="3" fill="currentColor"/><path d="M8 17 L13 22 L24 11" stroke="var(--bg)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>proofagent</a>
     <ul class="nav-links">
       <li><a href="/quickstart">Quickstart</a></li>
-      <li><a href="/leaderboard">Leaderboard</a></li>
-      <li><a href="/cost-calculator">Cost Calculator</a></li>
+      <li><a href="/leaderboard">Safety</a></li>
+      <li><a href="/skills">Skills</a></li>
+      <li><a href="/blog/">Blog</a></li>
       <li><a href="https://github.com/camgitt/proofagent">GitHub</a></li>
     </ul>
   </nav>
@@ -273,7 +274,7 @@
 
     <div class="faq-item">
       <h3>Is it free?</h3>
-      <p>Yes. MIT license. Free forever. No telemetry, no cloud, no signup.</p>
+      <p>Yes. MIT license. Open-source and free to use. No telemetry, no cloud, no signup required.</p>
     </div>
   </section>
 
@@ -289,6 +290,7 @@
     <div class="faq-item">
       <h3>How is it different from Promptfoo or DeepEval?</h3>
       <p>proofagent is pure Python with a pytest-style API. No YAML, no external CLI, no hosted platform. It's designed for <strong>agents</strong>, not just prompts — with first-class support for tool call testing, multi-step trajectory evaluation, and cost tracking. It also has zero telemetry and no vendor lock-in.</p>
+      <p>Promptfoo was acquired by OpenAI in March 2026. While it remains a capable tool, it is now owned by a model vendor, which creates a potential conflict of interest for unbiased evaluation. proofagent is MIT licensed, vendor-independent, and runs entirely on your machine. Your data never leaves your environment.</p>
     </div>
 
     <div class="faq-item">
@@ -305,7 +307,7 @@
     <div class="faq-item">
       <h3>How do I compare two models?</h3>
       <p>Use the <code>proofagent_compare</code> fixture or the CLI:</p>
-      <pre>proofagent compare --model-a gpt-5.4 --model-b claude-sonnet-4-6 "Explain gravity"</pre>
+      <pre>proofagent compare --model-a gpt-4.1-mini --model-b claude-sonnet-4-6 "Explain gravity"</pre>
       <p>This runs the same prompt on both models and shows a side-by-side comparison of output, cost, and latency.</p>
     </div>
 
@@ -371,7 +373,7 @@ proofagent gate --min-score 0.95 --block-on-fail</pre>
 
     <div class="faq-item">
       <h3>Does this help with compliance?</h3>
-      <p>The EU AI Act requires organizations deploying high-risk AI to demonstrate testing and monitoring. proofagent gives you a structured, auditable test suite with pass/fail records — exactly what compliance reviews ask for.</p>
+      <p>The EU AI Act requires organizations deploying high-risk AI to demonstrate testing and monitoring. proofagent can help you build a structured testing practice with auditable pass/fail records, but it is not a substitute for a comprehensive compliance program. Consult legal and compliance professionals for your specific obligations.</p>
     </div>
 
     <div class="faq-item">
@@ -396,7 +398,7 @@ proofagent gate --min-score 0.95 --block-on-fail</pre>
   </section>
 
   <footer>
-    <span>proofagent™ &mdash; MIT License</span>
+    <span>proofagent &mdash; MIT License</span>
     <span><a href="https://github.com/camgitt/proofagent">source</a> &middot; <a href="https://pypi.org/project/proofagent/">pypi</a> &middot; <a href="/terms">terms</a></span>
   </footer>
 

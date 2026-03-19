@@ -29,10 +29,10 @@ pip install proofagent
 ## How do I write my first test?
 
 ```python
-from provably import expect
+from proofagent import expect
 
 def test_greeting():
-    result = expect("Say hello").to_contain("hello")
+    result = expect("Say hello").contains("hello")
 ```
 
 Save this as `test_example.py` and run it with `pytest`.
@@ -43,17 +43,17 @@ Run `pytest` in your terminal. proofagent tests are standard pytest tests — al
 
 ## How do I see results in a dashboard?
 
-Run `provably dashboard` after your test run. This launches a local web UI showing pass/fail rates, latency, cost, and assertion details across all recorded test runs.
+Run `proofagent dashboard` after your test run. This launches a local web UI showing pass/fail rates, latency, cost, and assertion details across all recorded test runs.
 
 ## Can I test without an API key?
 
 Yes. Construct an `LLMResult` directly from a string and run assertions against it. This lets you test against saved outputs, synthetic data, or results from any source without making API calls.
 
 ```python
-from provably import LLMResult, expect
+from proofagent import LLMResult, expect
 
-result = LLMResult(output="The capital of France is Paris.")
-expect(result).to_contain("Paris")
+result = LLMResult(text="The capital of France is Paris.")
+expect(result).contains("Paris")
 ```
 
 ## How do I load test cases from a file?
@@ -66,10 +66,10 @@ Run the same test suite against different models and compare the dashboard outpu
 
 ## How do I add custom assertions?
 
-Write a Python function that takes a result and raises `AssertionError` on failure. You can use this directly in your tests or register it as a reusable assertion with `expect().satisfies(your_function)`.
+Write a Python function that takes a result and raises `AssertionError` on failure. You can use this directly in your tests or register it as a reusable assertion with `expect().custom("name", your_function)`.
 
 ```python
-expect(result).satisfies(lambda r: len(r.output) < 500)
+expect(result).custom("short_output", lambda r: len(r.text) < 500)
 ```
 
 ## How do I use it in CI/CD?
@@ -82,7 +82,7 @@ LLM outputs are non-deterministic. Without automated tests, you have no way to c
 
 ## What is the EU AI Act and why does it matter?
 
-The EU AI Act requires organizations deploying high-risk AI systems to demonstrate testing, monitoring, and risk management. proofagent gives you a structured, auditable record of what you tested and whether it passed — which is exactly what compliance requires.
+The EU AI Act requires organizations deploying high-risk AI systems to demonstrate testing, monitoring, and risk management. proofagent can help you build a structured testing practice with auditable pass/fail records, but it is not a substitute for a comprehensive compliance program. Consult legal and compliance professionals for your specific obligations.
 
 ## Why not just test manually?
 

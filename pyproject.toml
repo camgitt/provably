@@ -12,7 +12,7 @@ license = "MIT"
 authors = [{name = "proofagent"}]
 keywords = ["ai", "agents", "eval", "testing", "llm", "safety", "compliance"]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 4 - Beta",
     "Framework :: Pytest",
     "Intended Audience :: Developers",
     "Programming Language :: Python :: 3",
@@ -29,8 +29,9 @@ dependencies = [
 openai = ["openai>=1.0"]
 anthropic = ["anthropic>=0.30"]
 gemini = ["google-genai>=1.0"]
-ollama = ["ollama>=0.3"]
-all = ["openai>=1.0", "anthropic>=0.30", "google-genai>=1.0", "ollama>=0.3"]
+ollama = ["requests>=2.20"]
+yaml = ["pyyaml>=6.0"]
+all = ["openai>=1.0", "anthropic>=0.30", "google-genai>=1.0", "requests>=2.20", "pyyaml>=6.0"]
 dev = ["pytest>=8.0", "pytest-mock"]
 
 [project.scripts]

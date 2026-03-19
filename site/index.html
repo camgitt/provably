@@ -5,15 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <title>proofagent — pytest for AI agents</title>
-<meta name="description" content="Open-source evaluation framework for AI agents. 20 assertions, 8 providers, zero telemetry. Just Python.">
+<meta name="description" content="Independent, vendor-neutral evaluation framework for AI agents. Open-source, MIT licensed, zero telemetry. The eval tool that isn't owned by a model vendor.">
 <meta property="og:title" content="proofagent — pytest for AI agents">
-<meta property="og:description" content="Catch AI agent failures before your users do. 20 assertions, 8 providers, zero telemetry.">
-<meta property="og:image" content="https://proofagent.dev/og.svg">
+<meta property="og:description" content="Catch AI agent failures before your users do. 19 assertions, 4 providers, zero telemetry.">
+<meta property="og:image" content="https://proofagent.dev/og.png">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="proofagent — pytest for AI agents">
-<meta name="twitter:description" content="Catch AI agent failures before your users do. 20 assertions, 8 providers, zero telemetry.">
-<meta name="twitter:image" content="https://proofagent.dev/og.svg">
+<meta name="twitter:description" content="Catch AI agent failures before your users do. 19 assertions, 4 providers, zero telemetry.">
+<meta name="twitter:image" content="https://proofagent.dev/og.png">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
@@ -461,6 +461,83 @@
   footer a { color: var(--text-3); text-decoration: none; }
   footer a:hover { color: var(--text); }
 
+  /* === TOPLINE BANNER === */
+  .topline-banner {
+    background: oklch(0.18 0.02 255);
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 10px 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+    color: var(--text-2);
+    line-height: 1.5;
+  }
+
+  .topline-banner a {
+    color: var(--text);
+    text-decoration: underline;
+    text-decoration-color: var(--text-3);
+    text-underline-offset: 2px;
+  }
+
+  .topline-banner a:hover { text-decoration-color: var(--text); }
+
+  .topline-dismiss {
+    background: none;
+    border: none;
+    color: var(--text-4);
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+    padding: 0 2px;
+    flex-shrink: 0;
+    transition: color 0.15s;
+  }
+
+  .topline-dismiss:hover { color: var(--text-2); }
+
+  /* === INDEPENDENCE === */
+  .independence {
+    padding: 48px 0;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .independence h2 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+
+  .independence p {
+    font-size: 15px;
+    color: var(--text-2);
+    line-height: 1.65;
+    max-width: 580px;
+  }
+
+  .independence p + p {
+    margin-top: 12px;
+  }
+
+  .independence-badges {
+    display: flex;
+    gap: 16px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+
+  .independence-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-3);
+    background: var(--bg-raised);
+  }
+
   /* === RESPONSIVE === */
   @media (max-width: 600px) {
     .hero h1 { font-size: 28px; }
@@ -474,69 +551,33 @@
 </style>
 </head>
 <body>
+
+<div class="topline-banner" id="topline-banner">
+  <span>Promptfoo was acquired by OpenAI (March 2026). Your eval tool shouldn't be owned by the model vendor you're evaluating. <a href="#independence">Learn more</a></span>
+  <button class="topline-dismiss" onclick="document.getElementById('topline-banner').style.display='none'" aria-label="Dismiss">&times;</button>
+</div>
+
 <div class="wrap">
 
   <nav>
-    <a href="/" class="nav-brand"><svg class="nav-logo" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" rx="3" fill="currentColor"/><path d="M8 17 L13 22 L24 11" stroke="var(--bg)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>proofagent™</a>
+    <a href="/" class="nav-brand"><svg class="nav-logo" role="img" aria-label="proofagent logo" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" rx="3" fill="currentColor"/><path d="M8 17 L13 22 L24 11" stroke="var(--bg)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>proofagent</a>
     <ul class="nav-links">
       <li><a href="/quickstart">Quickstart</a></li>
-      <li><a href="/leaderboard">Leaderboard</a></li>
-      <li><a href="/cost-calculator">Cost Calculator</a></li>
+      <li><a href="/leaderboard">Safety</a></li>
+      <li><a href="/skills">Skills</a></li>
+      <li><a href="/blog/">Blog</a></li>
       <li><a href="https://github.com/camgitt/proofagent">GitHub</a></li>
     </ul>
   </nav>
 
   <!-- === HERO === -->
   <section class="hero">
-    <h1><strong>pytest for AI agents.</strong><br>Catch failures before your users do.</h1>
-    <p>Automated tests for AI agent outputs. Safety, accuracy, tool usage, cost. Run them on every deploy. Know in seconds when something breaks.</p>
+    <h1><strong>pytest for AI agents.</strong><br>Independent. No vendor lock-in.</h1>
+    <p>Test safety, accuracy, tool usage, cost, and skill. Works with any model, any provider. Runs on your machine. Zero telemetry. Not owned by a model vendor.</p>
     <div class="install-row">
       <div class="install-box"><span>$</span> pip install proofagent && proofagent init</div>
       <a href="/quickstart" class="btn btn-primary">Get started</a>
       <a href="https://github.com/camgitt/proofagent" class="btn btn-ghost">GitHub</a>
-    </div>
-  </section>
-
-  <!-- === STATS === -->
-  <section class="stats">
-    <div class="stat">
-      <span class="stat-num">20</span>
-      <span class="stat-label">assertions</span>
-    </div>
-    <div class="stat">
-      <span class="stat-num">8</span>
-      <span class="stat-label">providers</span>
-    </div>
-    <div class="stat">
-      <span class="stat-num">0</span>
-      <span class="stat-label">telemetry</span>
-    </div>
-    <div class="stat">
-      <span class="stat-num">0</span>
-      <span class="stat-label">config files</span>
-    </div>
-  </section>
-
-  <!-- === WHAT GOES WRONG === -->
-  <section class="pain">
-    <h2>What goes wrong without testing</h2>
-    <div class="pain-grid">
-      <div class="pain-item">
-        <strong>Safety guardrails break silently</strong>
-        <p>You upgrade models. The new one stops refusing harmful requests. Users get dangerous responses for days before anyone notices.</p>
-      </div>
-      <div class="pain-item">
-        <strong>Bots start hallucinating</strong>
-        <p>You tweak a system prompt. Your support bot invents a "30-day money-back guarantee" that doesn't exist. Customers demand refunds.</p>
-      </div>
-      <div class="pain-item">
-        <strong>Costs explode overnight</strong>
-        <p>A new model generates 5x longer responses. Your $200/month bill becomes $1,000. You find out when the invoice arrives.</p>
-      </div>
-      <div class="pain-item">
-        <strong>Agents skip critical steps</strong>
-        <p>Your trading bot stops calling the risk-check tool after a refactor. It executes trades with no limits. You find out from your bank.</p>
-      </div>
     </div>
   </section>
 
@@ -643,53 +684,31 @@
         <div><span class="t-dim">  Cost: $0.184</span></div>
       </div>
     </div>
-    <p class="scan-note">Runs 10 dangerous prompts against any model and checks if it refuses all of them. Works with OpenAI, Anthropic, Gemini, and Ollama.</p>
-  </section>
+    <p class="scan-note">Runs 10 dangerous prompts against any model and checks if it refuses all of them. Works with OpenAI, Anthropic, Gemini, Ollama, or any HTTP endpoint.</p>
 
-  <!-- === FEATURES === -->
-  <section class="features">
-    <h2>What's included</h2>
-    <div class="feature-grid">
-      <div class="feature">
-        <h3>20 assertions</h3>
-        <p>contains, refused, valid_json, semantic_match, tool_calls_contain, matches_snapshot, turn_count, and more. All chainable.</p>
+    <div style="margin-top:24px;">
+      <div class="terminal">
+        <div class="terminal-bar">
+          <div class="dot dot-r"></div>
+          <div class="dot dot-y"></div>
+          <div class="dot dot-g"></div>
+          <span>Test a deployed agent by URL</span>
+        </div>
+        <div class="terminal-body">
+          <div><span class="t-muted">$</span> <span class="t-bright">proofagent skill run --endpoint https://my-agent.com/api/chat --skill coding</span></div>
+          <div>&nbsp;</div>
+          <div><span class="t-dim">  Running 5 coding challenges...</span></div>
+          <div>&nbsp;</div>
+          <div><span class="t-green">  ✓</span> <span class="t-text">Palindrome checker</span>          <span class="t-dim">9/10</span></div>
+          <div><span class="t-green">  ✓</span> <span class="t-text">Two-sum solution</span>            <span class="t-dim">8/10</span></div>
+          <div><span class="t-green">  ✓</span> <span class="t-text">LRU cache implementation</span>    <span class="t-dim">9/10</span></div>
+          <div><span class="t-green">  ✓</span> <span class="t-text">Flatten nested list</span>         <span class="t-dim">8/10</span></div>
+          <div><span class="t-green">  ✓</span> <span class="t-text">Retry decorator</span>             <span class="t-dim">9/10</span></div>
+          <div>&nbsp;</div>
+          <div><span class="t-bright">  Coding: 8.6/10 — Grade: A</span></div>
+        </div>
       </div>
-      <div class="feature">
-        <h3>4 prompt packs</h3>
-        <p>Safety, bias, accuracy, hallucination. Run <code>proofagent scan model --pack bias</code> for instant results. 40 prompts total.</p>
-      </div>
-      <div class="feature">
-        <h3>Regression snapshots</h3>
-        <p>Save model outputs as baselines. Future runs compare automatically. Like Jest snapshots, but for AI.</p>
-      </div>
-      <div class="feature">
-        <h3>Model drift detection</h3>
-        <p>Track scores over time. <code>proofagent drift</code> catches when a provider silently changes model behavior.</p>
-      </div>
-      <div class="feature">
-        <h3>Cost optimizer</h3>
-        <p>Run your evals against multiple models. Get a recommendation for the cheapest one that passes.</p>
-      </div>
-      <div class="feature">
-        <h3>Conversation testing</h3>
-        <p>Test multi-turn dialogues. Check turn count, total cost, and whether any turn was refused.</p>
-      </div>
-      <div class="feature">
-        <h3>CI/CD gate + GitHub Action</h3>
-        <p>Block deploys that fail evaluation. 3-line GitHub Action setup. Set minimum pass rate and max cost.</p>
-      </div>
-      <div class="feature">
-        <h3>Compliance reports</h3>
-        <p><code>proofagent report --format html</code> generates a clean report for stakeholders. Pass rates, costs, per-test details.</p>
-      </div>
-      <div class="feature">
-        <h3>8 providers</h3>
-        <p>OpenAI, Anthropic, Gemini, Ollama, Mistral, Groq, Together, Azure. Or any OpenAI-compatible endpoint.</p>
-      </div>
-      <div class="feature">
-        <h3>Zero config</h3>
-        <p>No YAML. No JSON files. No telemetry. No cloud. It's a pytest plugin. Write Python, run pytest.</p>
-      </div>
+      <p class="scan-note">Paste any agent URL. proofagent sends challenges, an LLM judge scores the responses, you get a grade. No SDK integration required.</p>
     </div>
   </section>
 
@@ -698,36 +717,88 @@
     <h2>How it compares</h2>
     <table>
       <thead>
-        <tr><th></th><th>Promptfoo</th><th>DeepEval</th><th>proofagent™</th></tr>
+        <tr><th></th><th>Promptfoo <span style="opacity:0.6;font-weight:400;text-transform:none;letter-spacing:0">(now OpenAI)</span></th><th>DeepEval</th><th>proofagent</th></tr>
       </thead>
       <tbody>
+        <tr><td>Vendor independent</td><td class="no">No (OpenAI-owned)</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
         <tr><td>Language</td><td>TypeScript</td><td>Python</td><td>Python</td></tr>
-        <tr><td>Config format</td><td>YAML-first</td><td>Python</td><td class="yes">Pure Python</td></tr>
-        <tr><td>pytest native</td><td class="no">No</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
-        <tr><td>Cost tracking</td><td class="no">Manual</td><td class="no">Via platform</td><td class="yes">Built-in</td></tr>
+        <tr><td>Config</td><td>YAML files</td><td>Python + cloud</td><td class="yes">Pure Python, no config</td></tr>
+        <tr><td>Test any endpoint</td><td class="no">No</td><td class="no">No</td><td class="yes">--endpoint URL</td></tr>
+        <tr><td>Skill proofs</td><td class="no">No</td><td class="no">No</td><td class="yes">5 categories + custom</td></tr>
         <tr><td>Telemetry</td><td>Default on</td><td>Default on</td><td class="yes">Zero</td></tr>
         <tr><td>Cloud required</td><td class="no">Optional</td><td>For dashboard</td><td class="yes">Never</td></tr>
-        <tr><td>Snapshots</td><td class="no">No</td><td class="no">No</td><td class="yes">Built-in</td></tr>
         <tr><td>Drift detection</td><td class="no">No</td><td class="no">No</td><td class="yes">Built-in</td></tr>
         <tr><td>Cost optimizer</td><td class="no">No</td><td class="no">No</td><td class="yes">Built-in</td></tr>
-        <tr><td>Setup</td><td>Config files</td><td>Decorators</td><td class="yes">pip install + go</td></tr>
+        <tr><td>Setup time</td><td>~15 min</td><td>~10 min</td><td class="yes">30 seconds</td></tr>
       </tbody>
     </table>
   </section>
 
+  <!-- === FEATURES === -->
+  <section class="features">
+    <h2>Everything you need</h2>
+    <div class="feature-grid">
+      <div class="feature">
+        <h3>Test any endpoint</h3>
+        <p><code>--endpoint https://your-agent.com/api</code> — test a deployed agent by URL. No SDK, no code changes.</p>
+      </div>
+      <div class="feature">
+        <h3>Skill proofs</h3>
+        <p>Score coding, reasoning, math, writing, summarization. LLM judge, 0-10, fingerprinted. <a href="/skills" style="color:var(--text-3)">Leaderboard &rarr;</a></p>
+      </div>
+      <div class="feature">
+        <h3>19 chainable assertions</h3>
+        <p>contains, refused, valid_json, semantic_match, tool_calls_contain, cost_under, matches_snapshot, and more.</p>
+      </div>
+      <div class="feature">
+        <h3>Custom skill packs</h3>
+        <p>Define challenges in YAML for your domain — support quality, legal accuracy, code review, anything.</p>
+      </div>
+      <div class="feature">
+        <h3>Drift detection</h3>
+        <p><code>proofagent drift</code> catches when a provider silently changes model behavior between runs.</p>
+      </div>
+      <div class="feature">
+        <h3>Cost optimizer</h3>
+        <p>Run evals against multiple models. Get a recommendation for the cheapest one that still passes.</p>
+      </div>
+      <div class="feature">
+        <h3>CI/CD gate</h3>
+        <p>Block deploys that fail evaluation. 3-line GitHub Action. Set minimum pass rate and max cost.</p>
+      </div>
+      <div class="feature">
+        <h3>Zero config</h3>
+        <p>No YAML. No JSON. No telemetry. No cloud. No signup. pip install, write Python, run pytest.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- === INDEPENDENCE === -->
+  <section class="independence" id="independence">
+    <h2>Built for developers who want independence</h2>
+    <p>proofagent is MIT licensed, runs entirely on your machine, and will never be acquired by a model vendor. Your evaluation tool should be neutral — not owned by the company whose models you're testing.</p>
+    <p>When your eval framework is owned by a model provider, incentives diverge. Benchmarks can be tuned, defaults can be nudged, and telemetry can be routed. We believe evaluation infrastructure should be independent by design.</p>
+    <div class="independence-badges">
+      <span class="independence-badge">MIT Licensed</span>
+      <span class="independence-badge">Zero telemetry</span>
+      <span class="independence-badge">Runs locally</span>
+      <span class="independence-badge">No vendor lock-in</span>
+    </div>
+  </section>
+
   <!-- === CTA === -->
   <section class="cta">
-    <h2><strong>Start testing</strong> in 30 seconds</h2>
-    <p>Install, run proofagent init, and your first test is passing. That's it.</p>
+    <h2><strong>One install. Three commands.</strong> Done.</h2>
+    <p>pip install proofagent. Run proofagent init. Your first test passes in 30 seconds. Add --endpoint to test any deployed agent by URL.</p>
     <div class="cta-buttons">
       <a href="/quickstart" class="btn btn-primary">Get started</a>
       <a href="https://github.com/camgitt/proofagent" class="btn btn-ghost">GitHub</a>
-      <a href="/leaderboard" class="btn btn-ghost">Safety Leaderboard</a>
+      <a href="/skills" class="btn btn-ghost">Skill Leaderboard</a>
     </div>
   </section>
 
   <footer>
-    <span>proofagent™ &mdash; MIT License</span>
+    <span>proofagent &mdash; MIT License</span>
     <span><a href="https://github.com/camgitt/proofagent">source</a> &middot; <a href="https://pypi.org/project/proofagent/">pypi</a> &middot; <a href="/terms">terms</a></span>
   </footer>
 

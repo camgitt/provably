@@ -11,7 +11,7 @@ def get_provider(name: str | None = None, **kwargs) -> Provider:
     """Get a provider instance by name, or auto-detect from environment.
 
     Args:
-        name: Provider name ('openai', 'anthropic', 'ollama').
+        name: Provider name ('openai', 'anthropic', 'ollama', 'endpoint').
               If None, auto-detects based on available API keys.
 
     Returns:
@@ -36,9 +36,13 @@ def get_provider(name: str | None = None, **kwargs) -> Provider:
         from proofagent.providers.ollama import OllamaProvider
 
         return OllamaProvider(**kwargs)
+    elif name == "endpoint":
+        from proofagent.providers.endpoint import EndpointProvider
+
+        return EndpointProvider(**kwargs)
     else:
         raise ValueError(
-            f"Unknown provider '{name}'. Available: openai, anthropic, gemini, ollama"
+            f"Unknown provider '{name}'. Available: openai, anthropic, gemini, ollama, endpoint"
         )
 
 
@@ -50,11 +54,17 @@ def _detect_provider() -> str:
         return "anthropic"
     if os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY"):
         return "gemini"
-    # Check if ollama is available before defaulting to it
+    # Check if ollama is actually running before defaulting to it
     try:
         import requests
+        requests.get("http://localhost:11434/api/version", timeout=1)
         return "ollama"
     except ImportError:
+        raise RuntimeError(
+            "No API key found. Set one of: OPENAI_API_KEY, ANTHROPIC_API_KEY, GOOGLE_API_KEY\n"
+            "  Or install Ollama for local models: pip install proofagent[ollama]"
+        )
+    except Exception:
         raise RuntimeError(
             "No API key found. Set one of: OPENAI_API_KEY, ANTHROPIC_API_KEY, GOOGLE_API_KEY\n"
             "  Or install Ollama for local models: pip install proofagent[ollama]"

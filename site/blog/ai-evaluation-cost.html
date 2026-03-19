@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<title>How Much Does AI Agent Evaluation Cost? — proofagent</title>
+<meta name="description" content="Real cost breakdowns for AI agent evaluation. Learn the token math, compare models, and cut your testing bill by 80% with optimization strategies.">
+<link rel="canonical" href="https://proofagent.dev/blog/ai-evaluation-cost" />
+<meta property="og:title" content="How Much Does AI Agent Evaluation Cost?">
+<meta property="og:description" content="Real cost breakdowns for AI agent evaluation suites across GPT-4o, Claude, and open-source models.">
+<meta property="og:image" content="https://proofagent.dev/og.png">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://proofagent.dev/blog/ai-evaluation-cost">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="How Much Does AI Agent Evaluation Cost?">
+<meta name="twitter:description" content="Real cost breakdowns for AI evaluation and how to optimize them.">
+<meta name="twitter:image" content="https://proofagent.dev/og.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "How Much Does AI Agent Evaluation Cost?",
+  "description": "Real cost breakdowns for AI agent evaluation suites, with optimization strategies to cut your testing bill.",
+  "datePublished": "2026-03-14",
+  "author": { "@type": "Organization", "name": "proofagent" },
+  "publisher": { "@type": "Organization", "name": "proofagent", "url": "https://proofagent.dev" },
+  "url": "https://proofagent.dev/blog/ai-evaluation-cost"
+}
+</script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: oklch(0.145 0.012 255);
+    --bg-raised: oklch(0.175 0.014 255);
+    --bg-inset: oklch(0.125 0.01 255);
+    --border: oklch(0.26 0.012 255);
+    --border-subtle: oklch(0.22 0.01 255);
+    --text: oklch(0.92 0.008 255);
+    --text-2: oklch(0.68 0.01 255);
+    --text-3: oklch(0.48 0.008 255);
+    --text-4: oklch(0.36 0.006 255);
+    --pass: oklch(0.70 0.16 158);
+    --fail: oklch(0.68 0.19 22);
+    --warn: oklch(0.76 0.13 80);
+    --accent: oklch(0.70 0.14 260);
+  }
+
+  html { font-size: 16px; }
+  body {
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.6;
+  }
+
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+
+  nav { padding: 24px 0; display: flex; justify-content: space-between; align-items: center; }
+  .nav-brand { font-family: 'IBM Plex Mono', monospace; font-size: 14px; font-weight: 500; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+  .nav-logo { width: 22px; height: 22px; }
+  .nav-links { display: flex; gap: 24px; list-style: none; }
+  .nav-links a { font-size: 13px; color: var(--text-3); text-decoration: none; transition: color 0.15s; }
+  .nav-links a:hover { color: var(--text); }
+
+  .back-link { display: inline-block; margin-top: 48px; font-size: 13px; color: var(--text-3); text-decoration: none; }
+  .back-link:hover { color: var(--text); }
+
+  article { margin: 16px 0 80px; }
+  article h1 { font-size: 32px; font-weight: 300; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 12px; }
+  article h1 strong { font-weight: 700; }
+  .article-meta { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--text-4); margin-bottom: 40px; }
+
+  article h2 { font-size: 20px; font-weight: 600; margin: 40px 0 12px; }
+  article h3 { font-size: 16px; font-weight: 600; margin: 28px 0 8px; }
+  article p { font-size: 15px; color: var(--text-2); line-height: 1.75; margin-bottom: 16px; }
+  article ul, article ol { margin: 0 0 16px 20px; }
+  article li { font-size: 15px; color: var(--text-2); line-height: 1.75; margin-bottom: 4px; }
+  article a { color: var(--accent); text-decoration: underline; }
+  article a:hover { color: var(--text); }
+
+  pre {
+    background: var(--bg-inset);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 16px 20px;
+    margin: 16px 0 24px;
+    overflow-x: auto;
+  }
+  pre code {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+  code {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    background: var(--bg-inset);
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+
+  .cost-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0 24px;
+    font-size: 14px;
+  }
+  .cost-table th, .cost-table td {
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .cost-table th {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .cost-table td { color: var(--text-2); }
+  .cost-table td:last-child { font-family: 'IBM Plex Mono', monospace; color: var(--text); }
+
+  .cta {
+    margin: 48px 0 80px;
+    padding: 32px;
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    text-align: center;
+  }
+  .cta p { font-size: 15px; color: var(--text-2); margin-bottom: 16px; }
+  .cta code {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    background: var(--bg-inset);
+    border: 1px solid var(--border);
+    padding: 8px 20px;
+    border-radius: 6px;
+    color: var(--text);
+  }
+
+  footer { padding: 32px 0; border-top: 1px solid var(--border-subtle); text-align: center; }
+  footer p { font-size: 12px; color: var(--text-4); }
+  footer a { color: var(--text-3); text-decoration: none; }
+  footer a:hover { color: var(--text); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <a class="nav-brand" href="/">
+      <img class="nav-logo" src="/logo.svg" alt="proofagent">
+      proofagent
+    </a>
+    <ul class="nav-links">
+      <li><a href="/quickstart">Quickstart</a></li>
+      <li><a href="/leaderboard">Safety</a></li>
+      <li><a href="/skills">Skills</a></li>
+      <li><a href="/blog/" style="color:var(--text)">Blog</a></li>
+      <li><a href="https://github.com/camgitt/proofagent">GitHub</a></li>
+    </ul>
+  </nav>
+
+  <a class="back-link" href="/blog">&larr; Back to blog</a>
+
+  <article>
+    <h1>How Much Does <strong>AI Agent Evaluation</strong> Cost?</h1>
+    <div class="article-meta">2026-03-14</div>
+
+    <p>Every API call costs money. When you're running evaluation suites across multiple models, multiple test categories, and on every commit, the bill adds up fast. This guide breaks down exactly what AI agent testing costs and how to keep it under control.</p>
+
+    <h2>The cost equation</h2>
+
+    <p>AI evaluation cost comes down to a simple formula:</p>
+
+<pre><code>Cost = (input_tokens + output_tokens) x price_per_token x num_tests x frequency</code></pre>
+
+    <p>Each safety or skill test involves sending a prompt (input tokens) and receiving a response (output tokens). If you're using LLM-as-judge scoring, there's a second API call where a judge model evaluates the response. That doubles your token usage per test.</p>
+
+    <p>The variables that matter most:</p>
+    <ul>
+      <li><strong>Model choice</strong> &mdash; GPT-4o costs ~10x more than GPT-4o-mini per token</li>
+      <li><strong>Number of tests</strong> &mdash; A full safety suite is 19 tests; skill packs add more</li>
+      <li><strong>Judge model</strong> &mdash; Using GPT-4o as a judge is expensive; smaller models work for most cases</li>
+      <li><strong>Frequency</strong> &mdash; Running on every commit vs. nightly vs. weekly</li>
+    </ul>
+
+    <h2>Real cost breakdown</h2>
+
+    <p>Here's what a typical evaluation run costs across popular models. This assumes the standard proofagent safety suite (19 tests) with an average of 200 input tokens and 150 output tokens per test.</p>
+
+    <table class="cost-table">
+      <thead>
+        <tr>
+          <th>Model (target)</th>
+          <th>Judge model</th>
+          <th>19 tests</th>
+          <th>Per month (daily)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>GPT-4o</td>
+          <td>GPT-4o-mini</td>
+          <td>$0.08</td>
+          <td>$2.40</td>
+        </tr>
+        <tr>
+          <td>GPT-4o-mini</td>
+          <td>GPT-4o-mini</td>
+          <td>$0.01</td>
+          <td>$0.30</td>
+        </tr>
+        <tr>
+          <td>Claude 3.5 Sonnet</td>
+          <td>GPT-4o-mini</td>
+          <td>$0.06</td>
+          <td>$1.80</td>
+        </tr>
+        <tr>
+          <td>Llama 3 (local)</td>
+          <td>GPT-4o-mini</td>
+          <td>$0.003</td>
+          <td>$0.09</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>The key insight: <strong>the target model dominates the cost, not the judge</strong>. Using a cheap judge model like GPT-4o-mini keeps evaluation overhead minimal without sacrificing scoring accuracy for safety tests.</p>
+
+    <h2>Scaling to multiple models</h2>
+
+    <p>If you're testing across 3 models (common for model selection or A/B testing), multiply accordingly. A full suite across GPT-4o, Claude Sonnet, and Llama 3 with daily runs costs roughly $4.29/month. That's less than a single developer lunch.</p>
+
+    <p>Add skill evaluations (coding, reasoning, math, writing, summarization) and you're looking at about 40 total tests per model. The cost roughly doubles compared to safety-only testing:</p>
+
+    <table class="cost-table">
+      <thead>
+        <tr>
+          <th>Scope</th>
+          <th>Tests</th>
+          <th>3 models, daily</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Safety only</td>
+          <td>19</td>
+          <td>$4.29/mo</td>
+        </tr>
+        <tr>
+          <td>Safety + Skills</td>
+          <td>~40</td>
+          <td>$9.00/mo</td>
+        </tr>
+        <tr>
+          <td>Safety + Skills + Custom</td>
+          <td>~60</td>
+          <td>$13.50/mo</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>How to optimize costs</h2>
+
+    <h3>Use a smaller judge model</h3>
+
+    <p>The judge model evaluates your target model's responses. For binary pass/fail safety tests, GPT-4o-mini performs nearly identically to GPT-4o as a judge. proofagent defaults to the most cost-effective judge for each test category.</p>
+
+<pre><code># Override the judge model
+proofagent scan --provider openai --model gpt-4o --judge gpt-4o-mini
+
+# Use proofagent's automatic cost optimization
+proofagent scan --provider openai --model gpt-4o --optimize</code></pre>
+
+    <h3>Run targeted scans</h3>
+
+    <p>Don't run the full suite on every commit. Run targeted scans based on what changed:</p>
+
+<pre><code># Only run refusal tests when system prompt changes
+proofagent scan --category refusal
+
+# Only run skill tests when retrieval pipeline changes
+proofagent scan --category coding,reasoning</code></pre>
+
+    <h3>Cache deterministic results</h3>
+
+    <p>If the model, prompt, and temperature haven't changed, the safety properties haven't changed either. proofagent caches results locally and skips redundant tests automatically when you use <code>--cache</code>.</p>
+
+    <h3>Use local models for development</h3>
+
+    <p>Run evaluations against a local Ollama instance during development, then test against production models in CI. Local inference is free &mdash; your only cost is electricity.</p>
+
+<pre><code># Free local testing during development
+proofagent scan --provider ollama --model llama3
+
+# Production models in CI only
+proofagent scan --provider openai --model gpt-4o --ci</code></pre>
+
+    <h2>Manual testing vs. automated testing cost</h2>
+
+    <p>The alternative to automated evaluation is manual testing. A developer spending 30 minutes reviewing AI outputs costs $25-75 depending on salary. That buys you <em>months</em> of automated daily evaluations. Manual testing also doesn't scale, isn't reproducible, and doesn't catch regressions between reviews.</p>
+
+    <p>The math is clear: automated AI evaluation pays for itself the first day you use it.</p>
+
+    <h2>Try the cost calculator</h2>
+
+    <p>Want exact numbers for your setup? Use the <a href="/cost-calculator">proofagent cost calculator</a> to estimate costs based on your specific models, test count, and run frequency.</p>
+  </article>
+
+  <div class="cta">
+    <p>Start testing your AI agent. Costs less than your morning coffee.</p>
+    <code>pip install proofagent</code>
+  </div>
+
+  <footer>
+    <p>proofagent &mdash; <a href="https://github.com/camgitt/proofagent">open source</a></p>
+  </footer>
+</div>
+</body>
+</html>

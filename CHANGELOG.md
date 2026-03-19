@@ -1,5 +1,33 @@
 # Changelog
 
+## 0.8.0 (2026-03-18)
+
+- **Skill proofs** — evaluate agent competence in coding, reasoning, math, writing, summarization
+  - `proofagent skill run <model> --skill all` — run skill evaluations with LLM-as-judge scoring
+  - `proofagent skill submit <path>` — submit proof to leaderboard
+  - `.skill_score()` assertion for pytest
+  - SHA-256 fingerprinted reports
+- **Custom skill packs** — define your own challenges via YAML (`--pack ./my_skills.yaml`)
+- **Skills leaderboard page** — tab-based view, URL submission, copyable CLI walkthrough
+- **Blog** — 4 articles including Promptfoo migration guide
+- Add `not_refused()` assertion (inverse of `refused()`)
+- Add `--provider` flag to `scan` and `skill run` commands
+- Add cross-provider model comparison (`--provider-a`, `--provider-b`)
+- Fix `refused()` false positives — broad patterns replaced with contextual phrases
+- Fix XSS in dashboard and leaderboard (HTML escaping)
+- Fix path traversal via model names in file paths
+- Fix cost fallback warnings for unknown models
+- Fix Ollama auto-detect to verify server is running
+- Fix `test` command to use `sys.executable` instead of `python`
+- Add `robots.txt` and `sitemap.xml`
+- Add community infrastructure (CONTRIBUTING.md, issue templates, CODE_OF_CONDUCT.md)
+- Remove certification language throughout — renamed to "evaluation reports"
+- Remove fabricated model scores from leaderboard
+- Remove TM symbols (no registration filed)
+- Normalize navigation across all site pages
+- Update comparison table and FAQ for Promptfoo's OpenAI acquisition
+- Bump status to Beta
+
 ## 0.7.2 (2026-03-16)
 
 - Add `proofagent doctor` command — checks Python, pytest, API keys, provider SDKs

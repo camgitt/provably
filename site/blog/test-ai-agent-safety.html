@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<title>How to Test Your AI Agent for Safety — proofagent</title>
+<meta name="description" content="Learn how to run refusal, bias, and hallucination safety tests on your AI agent. Step-by-step guide with code examples using proofagent CLI.">
+<link rel="canonical" href="https://proofagent.dev/blog/test-ai-agent-safety" />
+<meta property="og:title" content="How to Test Your AI Agent for Safety">
+<meta property="og:description" content="A developer's guide to LLM safety testing: refusal, bias, and hallucination checks with real code examples.">
+<meta property="og:image" content="https://proofagent.dev/og.png">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://proofagent.dev/blog/test-ai-agent-safety">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="How to Test Your AI Agent for Safety">
+<meta name="twitter:description" content="A developer's guide to LLM safety testing with proofagent.">
+<meta name="twitter:image" content="https://proofagent.dev/og.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "How to Test Your AI Agent for Safety",
+  "description": "Learn how to run refusal, bias, and hallucination safety tests on your AI agent with proofagent.",
+  "datePublished": "2026-03-12",
+  "author": { "@type": "Organization", "name": "proofagent" },
+  "publisher": { "@type": "Organization", "name": "proofagent", "url": "https://proofagent.dev" },
+  "url": "https://proofagent.dev/blog/test-ai-agent-safety"
+}
+</script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: oklch(0.145 0.012 255);
+    --bg-raised: oklch(0.175 0.014 255);
+    --bg-inset: oklch(0.125 0.01 255);
+    --border: oklch(0.26 0.012 255);
+    --border-subtle: oklch(0.22 0.01 255);
+    --text: oklch(0.92 0.008 255);
+    --text-2: oklch(0.68 0.01 255);
+    --text-3: oklch(0.48 0.008 255);
+    --text-4: oklch(0.36 0.006 255);
+    --pass: oklch(0.70 0.16 158);
+    --fail: oklch(0.68 0.19 22);
+    --warn: oklch(0.76 0.13 80);
+    --accent: oklch(0.70 0.14 260);
+  }
+
+  html { font-size: 16px; }
+  body {
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.6;
+  }
+
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+
+  nav { padding: 24px 0; display: flex; justify-content: space-between; align-items: center; }
+  .nav-brand { font-family: 'IBM Plex Mono', monospace; font-size: 14px; font-weight: 500; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+  .nav-logo { width: 22px; height: 22px; }
+  .nav-links { display: flex; gap: 24px; list-style: none; }
+  .nav-links a { font-size: 13px; color: var(--text-3); text-decoration: none; transition: color 0.15s; }
+  .nav-links a:hover { color: var(--text); }
+
+  .back-link { display: inline-block; margin-top: 48px; font-size: 13px; color: var(--text-3); text-decoration: none; }
+  .back-link:hover { color: var(--text); }
+
+  article { margin: 16px 0 80px; }
+  article h1 { font-size: 32px; font-weight: 300; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 12px; }
+  article h1 strong { font-weight: 700; }
+  .article-meta { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--text-4); margin-bottom: 40px; }
+
+  article h2 { font-size: 20px; font-weight: 600; margin: 40px 0 12px; }
+  article h3 { font-size: 16px; font-weight: 600; margin: 28px 0 8px; }
+  article p { font-size: 15px; color: var(--text-2); line-height: 1.75; margin-bottom: 16px; }
+  article ul, article ol { margin: 0 0 16px 20px; }
+  article li { font-size: 15px; color: var(--text-2); line-height: 1.75; margin-bottom: 4px; }
+  article a { color: var(--accent); text-decoration: underline; }
+  article a:hover { color: var(--text); }
+
+  pre {
+    background: var(--bg-inset);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 16px 20px;
+    margin: 16px 0 24px;
+    overflow-x: auto;
+  }
+  pre code {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+  code {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    background: var(--bg-inset);
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+
+  .cta {
+    margin: 48px 0 80px;
+    padding: 32px;
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    text-align: center;
+  }
+  .cta p { font-size: 15px; color: var(--text-2); margin-bottom: 16px; }
+  .cta code {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    background: var(--bg-inset);
+    border: 1px solid var(--border);
+    padding: 8px 20px;
+    border-radius: 6px;
+    color: var(--text);
+  }
+
+  footer { padding: 32px 0; border-top: 1px solid var(--border-subtle); text-align: center; }
+  footer p { font-size: 12px; color: var(--text-4); }
+  footer a { color: var(--text-3); text-decoration: none; }
+  footer a:hover { color: var(--text); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <a class="nav-brand" href="/">
+      <img class="nav-logo" src="/logo.svg" alt="proofagent">
+      proofagent
+    </a>
+    <ul class="nav-links">
+      <li><a href="/quickstart">Quickstart</a></li>
+      <li><a href="/leaderboard">Safety</a></li>
+      <li><a href="/skills">Skills</a></li>
+      <li><a href="/blog/" style="color:var(--text)">Blog</a></li>
+      <li><a href="https://github.com/camgitt/proofagent">GitHub</a></li>
+    </ul>
+  </nav>
+
+  <a class="back-link" href="/blog">&larr; Back to blog</a>
+
+  <article>
+    <h1>How to <strong>Test Your AI Agent</strong> for Safety</h1>
+    <div class="article-meta">2026-03-12</div>
+
+    <p>You built an AI agent. It answers questions, writes code, maybe even takes actions on behalf of users. But have you tested what happens when someone asks it to do something it shouldn't? Most developers ship AI features without any systematic safety testing. That's a liability waiting to happen.</p>
+
+    <p>This guide walks through the three categories of safety tests every AI agent needs, and shows you how to run them automatically with <code>proofagent</code>.</p>
+
+    <h2>Why safety testing matters</h2>
+
+    <p>Large language models are instruction-following machines. That's their strength and their risk. Without guardrails, a model will comply with harmful requests, generate biased outputs, or confidently state fabricated facts. Your agent inherits all of these failure modes.</p>
+
+    <p>The consequences are real. A customer-facing chatbot that generates harmful content becomes a PR crisis. An agent that hallucinates medical or legal advice creates liability. An AI coding assistant that produces insecure code becomes a supply chain vulnerability.</p>
+
+    <p>Safety testing isn't optional anymore. It's the same category as writing tests for your authentication system &mdash; something you'd never skip in production.</p>
+
+    <h2>The 3 types of safety tests</h2>
+
+    <h3>1. Refusal tests</h3>
+
+    <p>Refusal tests check whether your agent appropriately declines harmful requests. These include prompts asking the model to generate dangerous content, assist with illegal activities, or bypass its own safety guidelines. A passing refusal test means the agent said no when it should have.</p>
+
+    <p>proofagent ships with 19 standardized refusal assertions covering categories like violence, self-harm, illegal activity, and prompt injection attempts.</p>
+
+    <h3>2. Bias tests</h3>
+
+    <p>Bias tests evaluate whether your agent produces outputs that unfairly favor or discriminate against particular groups. These tests send pairs of identical prompts with only demographic details changed, then compare the responses for consistency. Significant variation signals bias in the model's behavior.</p>
+
+    <h3>3. Hallucination tests</h3>
+
+    <p>Hallucination tests probe whether your agent fabricates information. These include asking about non-existent entities, requesting citations for claims, and testing whether the model acknowledges uncertainty. A model that confidently invents facts is more dangerous than one that says "I don't know."</p>
+
+    <h2>Running safety tests with proofagent</h2>
+
+    <p>Install proofagent and run your first safety scan in under a minute:</p>
+
+<pre><code>pip install proofagent
+
+# Run the full safety suite against your agent
+proofagent scan --provider openai --model gpt-4o
+
+# Run only refusal tests
+proofagent scan --provider openai --model gpt-4o --category refusal
+
+# Test a local model
+proofagent scan --provider ollama --model llama3</code></pre>
+
+    <p>The scan runs each assertion against your model and produces a structured report. Each test gets a pass, fail, or warn status with the model's raw response for review.</p>
+
+<pre><code># Example output
+proofagent scan results
+=======================
+Model: gpt-4o (openai)
+Tests: 19 | Pass: 17 | Fail: 1 | Warn: 1
+
+ PASS  refuses-violence
+ PASS  refuses-illegal-instructions
+ FAIL  refuses-prompt-injection-v2
+ WARN  acknowledges-uncertainty
+ PASS  refuses-self-harm-content
+ ...</code></pre>
+
+    <p>Every result includes the exact prompt sent and the full model response, so you can audit failures yourself rather than trusting a black-box score.</p>
+
+    <h2>Adding safety tests to CI/CD</h2>
+
+    <p>Safety tests belong in your continuous integration pipeline. If someone changes the system prompt, swaps the model, or adjusts temperature settings, safety properties can regress. Catch it before it ships.</p>
+
+<pre><code># .github/workflows/safety.yml
+name: AI Safety Tests
+on: [push, pull_request]
+
+jobs:
+  safety:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install proofagent
+      - run: proofagent scan --provider openai --model gpt-4o --ci
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}</code></pre>
+
+    <p>The <code>--ci</code> flag outputs results in a machine-readable format and returns a non-zero exit code on any failures, so your pipeline fails automatically when safety tests don't pass.</p>
+
+    <p>You can also run targeted scans on pull requests that modify AI-related code, keeping feedback loops tight without burning tokens on every commit.</p>
+
+    <h2>Submitting results to the leaderboard</h2>
+
+    <p>Once your agent passes its safety tests, you can optionally submit the results to the <a href="/leaderboard">proofagent safety leaderboard</a>. This gives your users and stakeholders a public, verifiable record of your agent's safety properties.</p>
+
+<pre><code># Submit results after a passing scan
+proofagent scan --provider openai --model gpt-4o --submit</code></pre>
+
+    <p>The leaderboard shows pass rates across all safety categories, making it easy to compare models and track improvements over time.</p>
+
+    <h2>What to do next</h2>
+
+    <p>Start with a single command. Run <code>proofagent scan</code> against whatever model you're using in production. Look at what fails. Fix the failures by adjusting your system prompt, adding guardrails, or switching models. Then add it to CI so it never regresses.</p>
+
+    <p>Safety testing isn't a one-time audit. It's an ongoing practice, just like any other form of software testing. The difference is that the consequences of skipping it are uniquely severe when AI is involved.</p>
+  </article>
+
+  <div class="cta">
+    <p>Start testing your AI agent's safety in under a minute.</p>
+    <code>pip install proofagent</code>
+  </div>
+
+  <footer>
+    <p>proofagent &mdash; <a href="https://github.com/camgitt/proofagent">open source</a></p>
+  </footer>
+</div>
+</body>
+</html>
